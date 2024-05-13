@@ -28,6 +28,11 @@ export const Todolist = (props: TodolistPropsType) => {
     const aadTask=()=>{ props.addTask(newTaskTitle)
         setNewTaskTitle("")}
 
+    const onAllClickHandler=()=> {props.changeFilter("all")}
+    const onActiveClickHandler=()=> {props.changeFilter("active")}
+    const onComplitedClickHandler=()=> {props.changeFilter("complited")}
+
+
     return (
         <div className="todolist">
             <h3>{props.title}</h3>
@@ -50,13 +55,11 @@ export const Todolist = (props: TodolistPropsType) => {
                         )
                     })
                 }
-
             </ul>
             <div>
-                <button onClick={() => {props.changeFilter("all")}}>All</button>
-                <button onClick={() => {props.changeFilter("active")}}>Active
-                </button>
-                <button onClick={() => {props.changeFilter("complited")}}>Completed</button>
+                <button onClick={onAllClickHandler}>All</button>
+                <button onClick={onActiveClickHandler}>Active</button>
+                <button onClick={onComplitedClickHandler}>Completed</button>
             </div>
         </div>
     )
