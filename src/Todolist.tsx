@@ -23,8 +23,17 @@ export const Todolist = (props: TodolistPropsType) => {
         <div className="todolist">
             <h3>{props.title}</h3>
             <div>
-                <input value={newTaskTitle} onChange={(e)=>{
-                    setNewTaskTitle(e.currentTarget.value)}}/>
+                <input value={newTaskTitle}
+                       onChange={(e)=>{
+                    setNewTaskTitle(e.currentTarget.value)}}
+
+                       onKeyPress={(e)=>{if(e.ctrlKey && e.charCode=== 13){
+                           props.addTask(newTaskTitle)
+                           setNewTaskTitle("")
+                       }}}
+
+
+                />
                 <button onClick={(e)=>{
                     props.addTask(newTaskTitle)
                     setNewTaskTitle("")
