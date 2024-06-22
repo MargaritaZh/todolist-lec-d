@@ -59,6 +59,17 @@ function App() {
 
     }
 
+    //====================
+
+    function removeTodolist(todolistId: string) {
+        let filteredTodolist = todolists.filter(todolist => todolist.id !== todolistId)
+        setTodolists(filteredTodolist)
+        //удалить лишнее свойство ненужное в данных задачи для тодолиста
+        delete tasksObj[todolistId]
+        //засетить копию,чтобы произошла перерисовка
+        setTasksObj({...tasksObj})
+    }
+
     //=====================================
 
     let [tasksObj, setTasksObj] = useState(
@@ -105,7 +116,7 @@ function App() {
         setTasksObj({...tasksObj})
     }
 
-    function changeStatus(taskId: string, isDone: boolean,todolistId:string) {
+    function changeStatus(taskId: string, isDone: boolean, todolistId: string) {
         //достаем массив тасок из конкретного тодолиста из объекта объектов
         let tasks = tasksObj[todolistId]
 
@@ -118,6 +129,7 @@ function App() {
         }
 
     }
+
 
     return (
         <div className="App">
@@ -146,6 +158,7 @@ function App() {
                               addTask={addTask}
                               changeTaskStatus={changeStatus}
                               filter={todolist.filter}
+                              removeTodolist={removeTodolist}
                     />
                 )
             })}
