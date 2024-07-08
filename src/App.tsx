@@ -133,6 +133,7 @@ function App() {
 
     return (
         <div className="App">
+            <input/><button>+</button>
 
             {todolists.map(todolist => {
 
