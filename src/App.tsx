@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import './App.css';
 import {Todolist} from "./Todolist";
 import {v1} from "uuid";
+import {AddItemForm} from "./AddItemForm";
 
 
 export type  FilterValuesType = "all" | "active" | "complited"
@@ -38,12 +39,12 @@ function App() {
         {
             id: todolistId1,
             title: "What to learn?",
-            filter: "active",
+            filter: "all",
         },
         {
             id: todolistId2,
             title: "What to buy?",
-            filter: "complited",
+            filter: "all",
         },
     ])
 
@@ -133,7 +134,8 @@ function App() {
 
     return (
         <div className="App">
-            <input/><button>+</button>
+            <AddItemForm id={"GG"} addItem={() => {
+            }}/>
 
             {todolists.map(todolist => {
 
