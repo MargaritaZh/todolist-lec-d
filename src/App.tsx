@@ -131,11 +131,25 @@ function App() {
 
     }
 
+    function addTodolist(title: string) {
+        let todolist: TodolistType = {
+            id: v1(),
+            filter: "all",
+            title: title,
+        }
+
+        setTodolists([todolist, ...todolists])
+
+        setTasksObj({
+            ...tasksObj,
+            [todolist.id]: []
+        })
+    }
+
 
     return (
         <div className="App">
-            <AddItemForm id={"GG"} addItem={() => {
-            }}/>
+            <AddItemForm addItem={addTodolist}/>
 
             {todolists.map(todolist => {
 

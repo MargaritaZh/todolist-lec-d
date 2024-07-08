@@ -6,6 +6,7 @@ type AddItemFormPropsType = {
 
 export function AddItemForm(props: AddItemFormPropsType) {
 
+
     const [newTaskTitle, setNewTaskTitle] = useState("")
 
     const [error, setError] = useState<string | null>(null)
@@ -22,7 +23,8 @@ export function AddItemForm(props: AddItemFormPropsType) {
         }
     }
 
-    const aadTask = () => {
+    const addTask = () => {
+
         if (newTaskTitle.trim() !== "") {
             props.addItem(newTaskTitle.trim())
             setNewTaskTitle("")
@@ -38,7 +40,7 @@ export function AddItemForm(props: AddItemFormPropsType) {
                    onKeyPress={onKeyPressHandler}
                    className={error ? "error" : ""}
             />
-            <button onClick={aadTask}>+</button>
+            <button onClick={addTask}>+</button>
             {error && <div className="error-message">{error}</div>}
         </div>
 

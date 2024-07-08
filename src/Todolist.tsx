@@ -37,6 +37,7 @@ export const Todolist = (props: TodolistPropsType) => {
     }
 
     const addTask=(title:string)=>{
+
              props.addTask(title,props.id)
     }
 
