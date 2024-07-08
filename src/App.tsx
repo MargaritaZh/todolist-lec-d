@@ -133,6 +133,20 @@ function App() {
 
     }
 
+    function changeTaskTitle(taskId: string, newTitle:string, todolistId: string) {
+        //достаем массив тасок из конкретного тодолиста из объекта объектов
+        let tasks = tasksObj[todolistId]
+
+        let task = tasks.find(t => t.id === taskId
+        )
+        if (task) {
+            task.title = newTitle
+            //одна таска изменилась в массиве
+            setTasksObj({...tasksObj})
+        }
+
+    }
+
     function addTodolist(title: string) {
         let todolist: TodolistType = {
             id: v1(),
@@ -176,6 +190,7 @@ function App() {
                               changeFilter={changeFilter}
                               addTask={addTask}
                               changeTaskStatus={changeStatus}
+                              changeTaskTitle={changeTaskTitle}
                               filter={todolist.filter}
                               removeTodolist={removeTodolist}
                     />
