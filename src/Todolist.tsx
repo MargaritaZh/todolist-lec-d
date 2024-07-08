@@ -1,6 +1,7 @@
 import React, {ChangeEvent} from "react";
 import {FilterValuesType} from "./App";
 import {AddItemForm} from "./AddItemForm";
+import {EditableSpan} from "./EditableSpan";
 
 
 type TodolistPropsType = {
@@ -64,7 +65,9 @@ export const Todolist = (props: TodolistPropsType) => {
                                     type="checkbox"
                                     onChange={onChangeHandler}
                                     checked={t.isDone}/>
-                                <span>{t.title}</span>
+
+                                {/*<span>{t.title}-----</span>*/}
+                                <EditableSpan title={t.title}/>
                                 <button onClick={onRemoveHandler}>x</button>
                             </li>
                         )
@@ -85,5 +88,4 @@ export const Todolist = (props: TodolistPropsType) => {
         </div>
     )
 }
-
 
