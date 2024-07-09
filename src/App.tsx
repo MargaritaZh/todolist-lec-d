@@ -13,8 +13,8 @@ type TodolistType = {
     filter: FilterValuesType,
 }
 
-type TaskStateType={
-    [key:string]:Array<TaskType>
+type TaskStateType = {
+    [key: string]: Array<TaskType>
 }
 
 export function Counter() {
@@ -71,6 +71,18 @@ function App() {
         delete tasksObj[todolistId]
         //засетить копию,чтобы произошла перерисовка
         setTasksObj({...tasksObj})
+    }
+
+
+    function changeTodolistTitle(id: string, newTitle: string) {
+        const todolist = todolists.find(tl => tl.id === id)
+
+        if (todolist) {
+            todolist.title = newTitle
+            setTodolists([...todolists])
+
+        }
+
     }
 
     //=====================================
@@ -133,7 +145,7 @@ function App() {
 
     }
 
-    function changeTaskTitle(taskId: string, newTitle:string, todolistId: string) {
+    function changeTaskTitle(taskId: string, newTitle: string, todolistId: string) {
         //достаем массив тасок из конкретного тодолиста из объекта объектов
         let tasks = tasksObj[todolistId]
 
@@ -192,7 +204,7 @@ function App() {
                               changeTaskStatus={changeStatus}
                               changeTaskTitle={changeTaskTitle}
                               filter={todolist.filter}
-                              removeTodolist={removeTodolist}
+                              removeTodolist={removeTodolist} changeTodolistTitle={changeTodolistTitle}
                     />
                 )
             })}
