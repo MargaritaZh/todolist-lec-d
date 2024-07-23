@@ -54,7 +54,6 @@ export const Todolist = (props: TodolistPropsType) => {
     return (
         <div className="todolist">
             <h3><EditableSpan title={props.title} onChange={changeTodolistTitle}/>
-                {/*<button onClick={removeTodolist}>X</button>*/}
                 <IconButton aria-label="delete" onClick={removeTodolist}>
                     <Delete />
                 </IconButton>
@@ -84,7 +83,10 @@ export const Todolist = (props: TodolistPropsType) => {
 
                                 {/*<span>{t.title}-----</span>*/}
                                 <EditableSpan title={t.title} onChange={onChangeTitleHandler}/>
-                                <button onClick={onRemoveHandler}>x</button>
+
+                                <IconButton aria-label="delete" onClick={onRemoveHandler}>
+                                    <Delete />
+                                </IconButton>
                             </li>
                         )
                     })
