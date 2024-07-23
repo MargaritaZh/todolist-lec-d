@@ -2,8 +2,8 @@ import React, {ChangeEvent} from "react";
 import {FilterValuesType} from "./App";
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
-import {Button, IconButton} from "@mui/material";
-import {Delete} from "@mui/icons-material";
+import {Button, Checkbox, IconButton} from "@mui/material";
+import {CheckBox, Delete} from "@mui/icons-material";
 
 
 type TodolistPropsType = {
@@ -76,16 +76,17 @@ export const Todolist = (props: TodolistPropsType) => {
 
                         return (
                             <li key={t.id} className={t.isDone ? "is-done" : ""}>
-                                <input
-                                    type="checkbox"
-                                    onChange={onChangeStatusHandler}
-                                    checked={t.isDone}/>
+                                {/*<input*/}
+                                {/*    type="checkbox"*/}
+                                {/*    onChange={onChangeStatusHandler}*/}
+                                {/*    checked={t.isDone}/>*/}
+                                <Checkbox onChange={onChangeStatusHandler} checked={t.isDone} defaultChecked />
 
                                 {/*<span>{t.title}-----</span>*/}
                                 <EditableSpan title={t.title} onChange={onChangeTitleHandler}/>
 
                                 <IconButton aria-label="delete" onClick={onRemoveHandler}>
-                                    <Delete />
+                                    <Delete/>
                                 </IconButton>
                             </li>
                         )
