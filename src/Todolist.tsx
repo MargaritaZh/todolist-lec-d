@@ -3,7 +3,7 @@ import {FilterValuesType} from "./App";
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
 import {Button, Checkbox, IconButton} from "@mui/material";
-import {CheckBox, Delete} from "@mui/icons-material";
+import {Delete} from "@mui/icons-material";
 
 
 type TodolistPropsType = {
@@ -59,7 +59,7 @@ export const Todolist = (props: TodolistPropsType) => {
                 </IconButton>
             </h3>
             <AddItemForm addItem={addTask}/>
-            <ul>
+            <div>
                 {
                     props.tasks.map(t => {
 
@@ -75,7 +75,7 @@ export const Todolist = (props: TodolistPropsType) => {
                         }
 
                         return (
-                            <li key={t.id} className={t.isDone ? "is-done" : ""}>
+                            <div key={t.id} className={t.isDone ? "is-done" : ""}>
                                 {/*<input*/}
                                 {/*    type="checkbox"*/}
                                 {/*    onChange={onChangeStatusHandler}*/}
@@ -88,11 +88,11 @@ export const Todolist = (props: TodolistPropsType) => {
                                 <IconButton aria-label="delete" onClick={onRemoveHandler}>
                                     <Delete/>
                                 </IconButton>
-                            </li>
+                            </div>
                         )
                     })
                 }
-            </ul>
+            </div>
             <div>
                 <Button color={"inherit"} variant={props.filter === "all" ? "contained" : "text"}
                         onClick={onAllClickHandler}>All
