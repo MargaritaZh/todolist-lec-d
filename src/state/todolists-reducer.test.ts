@@ -1,4 +1,4 @@
-import {TodolistType} from '../App'
+import {FilterValuesType, TodolistType} from '../App'
 import {v1} from 'uuid'
 import {todolistsReducer} from "./todolists-reducer"
 
@@ -65,7 +65,29 @@ test("correct todolist should change its name", () => {
 })
 
 
+test("correct filter of todolist should be changed", () => {
 
+    let todolistID1 = v1()
+    let todolistID2 = v1()
+
+    let newFilter:FilterValuesType = "complited"
+
+    const startState: TodolistType[] = [
+        {id: todolistID1, title: 'What to learn', filter: 'all'},
+        {id: todolistID2, title: 'What to buy', filter: 'all'},
+    ]
+
+    const action = {
+        type: "CHANGE-TODOLIST-FITER",
+        id: todolistID2,
+        filter: newFilter,
+    }
+
+    const endState = todolistsReducer(startState, action)
+
+    expect(endState[0].filter).toBe("all")
+    expect(endState[1].filter).toBe(newFilter)
+})
 
 
 
