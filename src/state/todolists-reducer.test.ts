@@ -40,6 +40,31 @@ test("correct todolist should be added", () => {
     expect(endState[2].filter).toBe("all")
 })
 
+test("correct todolist should change its name", () => {
+
+    let todolistID1 = v1()
+    let todolistID2 = v1()
+
+    let newTodolistTitle = "New Todolist"
+
+    const startState: TodolistType[] = [
+        {id: todolistID1, title: 'What to learn', filter: 'all'},
+        {id: todolistID2, title: 'What to buy', filter: 'all'},
+    ]
+
+    const action = {
+        type: "CHANGE-TODOLIST-TITLE",
+        id: todolistID2,
+        title: newTodolistTitle,
+    }
+
+    const endState = todolistsReducer(startState, action)
+
+    expect(endState[0].title).toBe('What to learn')
+    expect(endState[1].title).toBe(newTodolistTitle)
+})
+
+
 
 
 
