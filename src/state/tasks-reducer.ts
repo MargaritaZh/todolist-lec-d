@@ -13,13 +13,21 @@ export type AddTaskActionType = {
     todolistId: string
 
 }
-export type Action3Type = {
-    type: "3"
-    id: string
-    title: string
+export type ChangeTaskStatusActionType = {
+    type: "CHANGE-TASK-STATUS"
+    taskId: string
+    isDone: boolean
+    todolistId: string
 }
 
-type ActionsType = RemoveTaskActionType | AddTaskActionType | Action3Type
+export type ChangeTaskTitleActionType = {
+    type: "CHANGE-TASK-TITLE"
+    taskId: string
+    newTaskTitle: string
+    todolistId: string
+}
+
+type ActionsType = RemoveTaskActionType | AddTaskActionType | ChangeTaskStatusActionType | ChangeTaskTitleActionType
 
 export const tasksReducer = (state: TaskStateType, action: ActionsType): TaskStateType => {
     switch (action.type) {
@@ -79,8 +87,67 @@ export const tasksReducer = (state: TaskStateType, action: ActionsType): TaskSta
             }
 
         }
-        case "3": {
-            return {...state}
+        case "CHANGE-TASK-STATUS": {
+            //из App  //достаем массив тасок из конкретного тодолиста из объекта объектов
+            //         let tasks = tasksObj[todolistId]
+            //
+            //         let task = tasks.find(t => t.id === taskId
+            //         )
+            //         if (task) {
+            //             task.isDone = isDone
+            //             //одна таска изменилась в массиве
+            //             setTasksObj({...tasksObj})
+            //         }
+
+            //как димыч пишет
+            // const copyState = {...state}
+            // let tasks = copyState[action.todolistId]
+            // let task = tasks.find(t => t.id === action.taskId
+            // )
+            // if (task) {
+            //     task.isDone = action.isDone
+            // }
+            // return copyState
+
+            //я написала
+            return {
+                ...state,
+                [action.todolistId]: state[action.todolistId].map(el => el.id === action.taskId ? {
+                    ...el,
+                    isDone: action.isDone
+                } : el)
+            }
+        }
+        case "CHANGE-TASK-TITLE": {
+
+            //из App
+            // let tasks = tasksObj[todolistId]
+            // let task = tasks.find(t => t.id === taskId
+            // )
+            // if (task) {
+            //     task.title = newTitle
+            //     //одна таска изменилась в массиве
+            //     setTasksObj({...tasksObj})
+            // }
+
+            //как димыч пишет
+            //     const copyState={...state}
+            //     let tasks = copyState[action.todolistId]
+            //     let task = tasks.find(t => t.id === action.taskId
+            //     )
+            //     if (task) {
+            //         task.title = action.newTaskTitle
+            //     }
+            //     return copyState
+
+//я написала
+            return {
+                ...state,
+                [action.todolistId]: state[action.todolistId].map(el => el.id === action.taskId ? {
+                    ...el,
+                    title: action.newTaskTitle
+                } : el)
+            }
         }
         default:
             throw new Error("I don't understand this action type")
@@ -95,7 +162,12 @@ export const addTaskAC = (taskTitle: string, todolistId: string): AddTaskActionT
     return {type: "ADD-TASK", taskTitle: taskTitle, todolistId: todolistId}
 }
 
-export const action3AC = (id: string, title: string): Action3Type => {
-    return {type: "3", id: id, title: title}
+export const changeStatusAC = (taskId: string, isDone: boolean, todolistId: string): ChangeTaskStatusActionType => {
+
+    return {type: "CHANGE-TASK-STATUS", taskId: taskId, isDone: isDone, todolistId: todolistId}
 }
 
+export const changeTaskTitleAC = (taskId: string, newTaskTitle: string, todolistId: string): ChangeTaskTitleActionType => {
+
+    return {type: "CHANGE-TASK-TITLE", taskId: taskId, newTaskTitle: newTaskTitle, todolistId: todolistId}
+}
