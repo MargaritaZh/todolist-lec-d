@@ -2,8 +2,7 @@ import {FilterValuesType, TodolistType} from '../App'
 import {v1} from 'uuid'
 import {
     addTodolistAC, changeTodolistFilterAC,
-    ChangeTodolistFilterActionType, changeTodolistTitleAC,
-    ChangeTodolistTitleActionType,
+    changeTodolistTitleAC,
     removeTodolistAC,
     todolistsReducer
 } from "./todolists-reducer"
