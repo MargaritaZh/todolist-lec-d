@@ -6,7 +6,7 @@ import {AddItemForm} from "./AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@mui/material";
 import {Menu} from "@mui/icons-material";
 import {todolistsReducer} from "./state/todolists-reducer";
-import {addTaskAC, removeTaskAC, tasksReducer} from "./state/tasks-reducer";
+import {addTaskAC, changeStatusAC, removeTaskAC, tasksReducer} from "./state/tasks-reducer";
 
 
 export type  FilterValuesType = "all" | "active" | "complited"
@@ -65,9 +65,21 @@ function AppWithReducers() {
 
 
     function addTask(title: string, todolistId: string) {
-       const action=addTaskAC(title,todolistId)
+        const action = addTaskAC(title, todolistId)
         dispatchToTasksReducer(action)
-           }
+    }
+
+
+    function changeStatus(taskId: string, isDone: boolean, todolistId: string) {
+        const action = changeStatusAC(taskId, isDone, todolistId)
+        dispatchToTasksReducer(action)
+    }
+
+
+
+
+
+
 
 
     function changeFilter(value: FilterValuesType, todolistId: string) {
@@ -106,22 +118,6 @@ function AppWithReducers() {
 
     //=====================================
 
-
-
-
-    function changeStatus(taskId: string, isDone: boolean, todolistId: string) {
-        //достаем массив тасок из конкретного тодолиста из объекта объектов
-        let tasks = tasksObj[todolistId]
-
-        let task = tasks.find(t => t.id === taskId
-        )
-        if (task) {
-            task.isDone = isDone
-            //одна таска изменилась в массиве
-            setTasksObj({...tasksObj})
-        }
-
-    }
 
     function changeTaskTitle(taskId: string, newTitle: string, todolistId: string) {
         //достаем массив тасок из конкретного тодолиста из объекта объектов
