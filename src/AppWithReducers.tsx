@@ -6,7 +6,7 @@ import {AddItemForm} from "./AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@mui/material";
 import {Menu} from "@mui/icons-material";
 import {todolistsReducer} from "./state/todolists-reducer";
-import {addTaskAC, changeStatusAC, removeTaskAC, tasksReducer} from "./state/tasks-reducer";
+import {addTaskAC, changeStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from "./state/tasks-reducer";
 
 
 export type  FilterValuesType = "all" | "active" | "complited"
@@ -76,10 +76,10 @@ function AppWithReducers() {
     }
 
 
-
-
-
-
+    function changeTaskTitle(taskId: string, newTitle: string, todolistId: string) {
+        const action = changeTaskTitleAC(taskId, newTitle, todolistId)
+        dispatchToTasksReducer(action)
+    }
 
 
     function changeFilter(value: FilterValuesType, todolistId: string) {
@@ -118,20 +118,6 @@ function AppWithReducers() {
 
     //=====================================
 
-
-    function changeTaskTitle(taskId: string, newTitle: string, todolistId: string) {
-        //достаем массив тасок из конкретного тодолиста из объекта объектов
-        let tasks = tasksObj[todolistId]
-
-        let task = tasks.find(t => t.id === taskId
-        )
-        if (task) {
-            task.title = newTitle
-            //одна таска изменилась в массиве
-            setTasksObj({...tasksObj})
-        }
-
-    }
 
     function addTodolist(title: string) {
         let todolist: TodolistType = {
