@@ -6,7 +6,7 @@ import {AddItemForm} from "./AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@mui/material";
 import {Menu} from "@mui/icons-material";
 import {todolistsReducer} from "./state/todolists-reducer";
-import {removeTaskAC, tasksReducer} from "./state/tasks-reducer";
+import {addTaskAC, removeTaskAC, tasksReducer} from "./state/tasks-reducer";
 
 
 export type  FilterValuesType = "all" | "active" | "complited"
@@ -64,6 +64,12 @@ function AppWithReducers() {
     }
 
 
+    function addTask(title: string, todolistId: string) {
+       const action=addTaskAC(title,todolistId)
+        dispatchToTasksReducer(action)
+           }
+
+
     function changeFilter(value: FilterValuesType, todolistId: string) {
 
         let todolist = todolists.find(tl => tl.id === todolistId)
@@ -101,22 +107,7 @@ function AppWithReducers() {
     //=====================================
 
 
-    function addTask(title: string, todolistId: string) {
-        let newTask = {
-            id: v1(),
-            title: title,
-            isDone: false
-        }
-        //нахожу нужный массив по ключу в объекте объектов
-        let tasks = tasksObj[todolistId]
-        //добавляю в массив новую таску
-        let newTasks = [newTask, ...tasks]
-        //перезаписываю свойство в объекте по КЛЮЧУ
-        // НЕЛЬЗЯ ТАК tasksObj."rrre-3jj-gfhgf" = newTasks
-        tasksObj[todolistId] = newTasks
-        //set копию измененного объекта,чтобы произошла отрисовка
-        setTasksObj({...tasksObj})
-    }
+
 
     function changeStatus(taskId: string, isDone: boolean, todolistId: string) {
         //достаем массив тасок из конкретного тодолиста из объекта объектов
