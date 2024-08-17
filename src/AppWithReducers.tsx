@@ -1,10 +1,12 @@
-import React, {useState} from 'react';
+import React, {useReducer, useState} from 'react';
 import './App.css';
 import {TaskType, Todolist} from "./Todolist";
 import {v1} from "uuid";
 import {AddItemForm} from "./AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@mui/material";
 import {Menu} from "@mui/icons-material";
+import {todolistsReducer} from "./state/todolists-reducer";
+import {removeTaskAC, tasksReducer} from "./state/tasks-reducer";
 
 
 export type  FilterValuesType = "all" | "active" | "complited"
@@ -20,13 +22,13 @@ export type TaskStateType = {
 }
 
 
-function App() {
+function AppWithReducers() {
 
     //======================================
     let todolistId1 = v1()//"gjjj-k22-nmk''
     let todolistId2 = v1()
 
-    let [todolists, setTodolists] = useState<Array<TodolistType>>([
+    let [todolists, dispatchToTodolistsReducer] = useReducer(todolistsReducer, [
         {
             id: todolistId1,
             title: "What to learn?",
@@ -38,6 +40,28 @@ function App() {
             filter: "all",
         },
     ])
+    let [tasksObj, dispatchToTasksReducer] = useReducer(tasksReducer,
+        {
+            [todolistId1]: [
+
+                {id: v1(), title: "HTML & CSS", isDone: true},
+                {id: v1(), title: "JS & TS", isDone: true},
+                {id: v1(), title: "ReactJS", isDone: false},
+                {id: v1(), title: "Rest API", isDone: false},
+                {id: v1(), title: "GraphQL", isDone: false}
+            ],
+            [todolistId2]: [
+                {id: v1(), title: "Book", isDone: false},
+                {id: v1(), title: "Milk", isDone: true},
+            ],
+        }
+    )
+
+
+    function removeTask(id: string, todolistId: string) {
+        const action = removeTaskAC(id, todolistId)
+        dispatchToTasksReducer(action)
+    }
 
 
     function changeFilter(value: FilterValuesType, todolistId: string) {
@@ -75,32 +99,6 @@ function App() {
     }
 
     //=====================================
-
-    let [tasksObj, setTasksObj] = useState<TaskStateType>(
-        {
-            [todolistId1]: [
-
-                {id: v1(), title: "HTML & CSS", isDone: true},
-                {id: v1(), title: "JS & TS", isDone: true},
-                {id: v1(), title: "ReactJS", isDone: false},
-                {id: v1(), title: "Rest API", isDone: false},
-                {id: v1(), title: "GraphQL", isDone: false}
-            ],
-            [todolistId2]: [
-                {id: v1(), title: "Book", isDone: false},
-                {id: v1(), title: "Milk", isDone: true},
-            ],
-        }
-    )
-
-
-    function removeTask(id: string, todolistId: string) {
-        let tasks = tasksObj[todolistId]
-        let filteredTasks = tasks.filter(t => t.id !== id)
-        tasksObj[todolistId] = filteredTasks
-
-        setTasksObj({...tasksObj})
-    }
 
 
     function addTask(title: string, todolistId: string) {
@@ -184,10 +182,10 @@ function App() {
                 </Toolbar>
             </AppBar>
             <Container fixed>
-                <Grid container style={{padding:"20px"}} >
+                <Grid container style={{padding: "20px"}}>
                     <AddItemForm addItem={addTodolist}/>
                 </Grid>
-                <Grid container spacing={3} >
+                <Grid container spacing={3}>
                     {todolists.map(todolist => {
 
                         let tasksForTodolist = tasksObj[todolist.id]
@@ -227,4 +225,4 @@ function App() {
     );
 }
 
-export default App;
+export default AppWithReducers;
