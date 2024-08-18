@@ -5,7 +5,7 @@ import {v1} from "uuid";
 import {AddItemForm} from "./AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@mui/material";
 import {Menu} from "@mui/icons-material";
-import {todolistsReducer} from "./state/todolists-reducer";
+import {changeTodolistFilterAC, removeTodolistAC, todolistsReducer} from "./state/todolists-reducer";
 import {addTaskAC, changeStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from "./state/tasks-reducer";
 
 
@@ -83,25 +83,16 @@ function AppWithReducers() {
 
 
     function changeFilter(value: FilterValuesType, todolistId: string) {
-
-        let todolist = todolists.find(tl => tl.id === todolistId)
-        if (todolist) {
-            todolist.filter = value
-//передадим копию [], чтобы произошла перерисовка компаненты
-            setTodolists([...todolists])
-        }
+        const action = changeTodolistFilterAC(todolistId, value)
+        dispatchToTodolistsReducer(action)
 
     }
 
-    //====================
 
     function removeTodolist(todolistId: string) {
-        let filteredTodolist = todolists.filter(todolist => todolist.id !== todolistId)
-        setTodolists(filteredTodolist)
-        //удалить лишнее свойство ненужное в данных задачи для тодолиста
-        delete tasksObj[todolistId]
-        //засетить копию,чтобы произошла перерисовка
-        setTasksObj({...tasksObj})
+        const action = removeTodolistAC(todolistId)
+        dispatchToTodolistsReducer(action)
+        dispatchToTasksReducer(action)
     }
 
 
