@@ -1,4 +1,4 @@
-import React, {useReducer, useState} from 'react';
+import React, {useReducer} from 'react';
 import './App.css';
 import {TaskType, Todolist} from "./Todolist";
 import {v1} from "uuid";
@@ -30,7 +30,6 @@ export type TaskStateType = {
 
 function AppWithReducers() {
 
-    //======================================
     let todolistId1 = v1()//"gjjj-k22-nmk''
     let todolistId2 = v1()
 
@@ -46,6 +45,7 @@ function AppWithReducers() {
             filter: "all",
         },
     ])
+
     let [tasksObj, dispatchToTasksReducer] = useReducer(tasksReducer,
         {
             [todolistId1]: [
@@ -91,7 +91,6 @@ function AppWithReducers() {
     function changeFilter(value: FilterValuesType, todolistId: string) {
         const action = changeTodolistFilterAC(todolistId, value)
         dispatchToTodolistsReducer(action)
-
     }
 
 
@@ -150,7 +149,6 @@ function AppWithReducers() {
                             tasksForTodolist = tasksForTodolist.filter(t => t.isDone === false)
 
                         }
-
 
                         return (<Grid item>
                                 <Paper style={{padding: "10px"}}>
