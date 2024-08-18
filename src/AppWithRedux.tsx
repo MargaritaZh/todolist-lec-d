@@ -13,7 +13,9 @@ import {
     todolistsReducer
 } from "./state/todolists-reducer";
 import {addTaskAC, changeStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from "./state/tasks-reducer";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {AppRootState} from "./state/store";
+import App from "./App";
 
 
 export type  FilterValuesType = "all" | "active" | "complited"
@@ -31,41 +33,46 @@ export type TaskStateType = {
 
 function AppWithRedux() {
 
-    let todolistId1 = v1()//"gjjj-k22-nmk''
-    let todolistId2 = v1()
+    // let todolistId1 = v1()//"gjjj-k22-nmk''
+    // let todolistId2 = v1()
 
     const dispatch=useDispatch()
 
+    const todolists=useSelector<AppRootState,Array<TodolistType>>(state=>state.todolist)
 
-    let [todolists] = useReducer(todolistsReducer, [
-        {
-            id: todolistId1,
-            title: "What to learn?",
-            filter: "all",
-        },
-        {
-            id: todolistId2,
-            title: "What to buy?",
-            filter: "all",
-        },
-    ])
+    const tasks=useSelector<AppRootState,TaskStateType>(state=>state.tasks)
 
-    let [tasksObj] = useReducer(tasksReducer,
-        {
-            [todolistId1]: [
 
-                {id: v1(), title: "HTML & CSS", isDone: true},
-                {id: v1(), title: "JS & TS", isDone: true},
-                {id: v1(), title: "ReactJS", isDone: false},
-                {id: v1(), title: "Rest API", isDone: false},
-                {id: v1(), title: "GraphQL", isDone: false}
-            ],
-            [todolistId2]: [
-                {id: v1(), title: "Book", isDone: false},
-                {id: v1(), title: "Milk", isDone: true},
-            ],
-        }
-    )
+
+    // let [todolists] = useReducer(todolistsReducer, [
+    //     {
+    //         id: todolistId1,
+    //         title: "What to learn?",
+    //         filter: "all",
+    //     },
+    //     {
+    //         id: todolistId2,
+    //         title: "What to buy?",
+    //         filter: "all",
+    //     },
+    // ])
+
+    // let [tasks] = useReducer(tasksReducer,
+    //     {
+    //         [todolistId1]: [
+    //
+    //             {id: v1(), title: "HTML & CSS", isDone: true},
+    //             {id: v1(), title: "JS & TS", isDone: true},
+    //             {id: v1(), title: "ReactJS", isDone: false},
+    //             {id: v1(), title: "Rest API", isDone: false},
+    //             {id: v1(), title: "GraphQL", isDone: false}
+    //         ],
+    //         [todolistId2]: [
+    //             {id: v1(), title: "Book", isDone: false},
+    //             {id: v1(), title: "Milk", isDone: true},
+    //         ],
+    //     }
+    // )
 
 
     function removeTask(id: string, todolistId: string) {
@@ -151,7 +158,7 @@ function AppWithRedux() {
                 <Grid container spacing={3}>
                     {todolists.map(todolist => {
 
-                        let tasksForTodolist = tasksObj[todolist.id]
+                        let tasksForTodolist = tasks[todolist.id]
 
                         if (todolist.filter === "complited") {
                             tasksForTodolist = tasksForTodolist.filter(t => t.isDone === true)
