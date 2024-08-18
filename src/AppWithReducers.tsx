@@ -5,7 +5,12 @@ import {v1} from "uuid";
 import {AddItemForm} from "./AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@mui/material";
 import {Menu} from "@mui/icons-material";
-import {changeTodolistFilterAC, removeTodolistAC, todolistsReducer} from "./state/todolists-reducer";
+import {
+    changeTodolistFilterAC,
+    changeTodolistTitleAC,
+    removeTodolistAC,
+    todolistsReducer
+} from "./state/todolists-reducer";
 import {addTaskAC, changeStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from "./state/tasks-reducer";
 
 
@@ -97,20 +102,15 @@ function AppWithReducers() {
 
 
     function changeTodolistTitle(id: string, newTitle: string) {
-        const todolist = todolists.find(tl => tl.id === id)
-
-        if (todolist) {
-            todolist.title = newTitle
-            setTodolists([...todolists])
-
-        }
-
+        const action = changeTodolistTitleAC(id,newTitle)
+        dispatchToTodolistsReducer(action)
     }
-
-    //=====================================
 
 
     function addTodolist(title: string) {
+
+
+
         let todolist: TodolistType = {
             id: v1(),
             filter: "all",
