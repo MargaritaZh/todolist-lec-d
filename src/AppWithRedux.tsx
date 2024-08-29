@@ -29,6 +29,7 @@ export type TaskStateType = {
 }
 
 
+
 function AppWithRedux() {
 
     // let todolistId1 = v1()//"gjjj-k22-nmk''
@@ -151,7 +152,9 @@ function AppWithRedux() {
             </AppBar>
             <Container fixed>
                 <Grid container style={{padding: "20px"}}>
+
                     <AddItemForm addItem={addTodolist}/>
+
                 </Grid>
                 <Grid container spacing={3}>
                     {todolists.map(todolist => {
