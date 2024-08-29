@@ -1,4 +1,4 @@
-import React, {useReducer} from 'react';
+import React, {useCallback, useReducer} from 'react';
 import './App.css';
 import {TaskType, Todolist} from "./Todolist";
 import {v1} from "uuid";
@@ -10,7 +10,7 @@ import {
     changeTodolistFilterAC,
     changeTodolistTitleAC,
     removeTodolistAC,
-    } from "./state/todolists-reducer";
+} from "./state/todolists-reducer";
 import {addTaskAC, changeStatusAC, changeTaskTitleAC, removeTaskAC} from "./state/tasks-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootState} from "./state/store";
@@ -29,18 +29,16 @@ export type TaskStateType = {
 }
 
 
-
 function AppWithRedux() {
 
     // let todolistId1 = v1()//"gjjj-k22-nmk''
     // let todolistId2 = v1()
 
-    const dispatch=useDispatch()
+    const dispatch = useDispatch()
 
-    const todolists=useSelector<AppRootState,Array<TodolistType>>(state=>state.todolist)
+    const todolists = useSelector<AppRootState, Array<TodolistType>>(state => state.todolist)
 
-    const tasks=useSelector<AppRootState,TaskStateType>(state=>state.tasks)
-
+    const tasks = useSelector<AppRootState, TaskStateType>(state => state.tasks)
 
 
     // let [todolists] = useReducer(todolistsReducer, [
@@ -124,12 +122,12 @@ function AppWithRedux() {
     }
 
 
-    function addTodolist(title: string) {
+    const addTodolist = useCallback((title: string) => {
         const action = addTodolistAC(title)
         // dispatchToTodolistsReducer(action)
         // dispatchToTasksReducer(action)
         dispatch(action)
-    }
+    }, [])
 
     return (
         <div className="App">
