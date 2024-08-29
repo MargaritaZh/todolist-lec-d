@@ -25,7 +25,7 @@ export type TaskType = {
     title: string
     isDone: boolean
 }
-export const Todolist = (props: TodolistPropsType) => {
+export const Todolist = React.memo(function(props: TodolistPropsType) {
 
     const onAllClickHandler = () => {
         props.changeFilter("all", props.id)
@@ -108,5 +108,5 @@ export const Todolist = (props: TodolistPropsType) => {
             </div>
         </div>
     )
-}
+})
 

@@ -72,55 +72,49 @@ function AppWithRedux() {
     // )
 
 
-    function removeTask(id: string, todolistId: string) {
+    const removeTask = useCallback(function (id: string, todolistId: string) {
         const action = removeTaskAC(id, todolistId)
         // dispatchToTasksReducer(action)
         dispatch(action)
-    }
+    }, [])
 
-
-    function addTask(title: string, todolistId: string) {
+    const addTask = useCallback(function (title: string, todolistId: string) {
         const action = addTaskAC(title, todolistId)
         // dispatchToTasksReducer(action)
         dispatch(action)
-    }
+    }, [])
 
-
-    function changeStatus(taskId: string, isDone: boolean, todolistId: string) {
+    const changeStatus = useCallback(function (taskId: string, isDone: boolean, todolistId: string) {
         const action = changeStatusAC(taskId, isDone, todolistId)
         // dispatchToTasksReducer(action)
         dispatch(action)
-    }
+    }, [])
 
-
-    function changeTaskTitle(taskId: string, newTitle: string, todolistId: string) {
+    const changeTaskTitle = useCallback(function (taskId: string, newTitle: string, todolistId: string) {
         const action = changeTaskTitleAC(taskId, newTitle, todolistId)
         // dispatchToTasksReducer(action)
         dispatch(action)
-    }
+    }, [])
 
-
-    function changeFilter(value: FilterValuesType, todolistId: string) {
+    const changeFilter = useCallback(function (value: FilterValuesType, todolistId: string) {
         const action = changeTodolistFilterAC(todolistId, value)
         // dispatchToTodolistsReducer(action)
         dispatch(action)
-    }
+    }, [])
 
-
-    function removeTodolist(todolistId: string) {
+    const removeTodolist = useCallback(function (todolistId: string) {
         const action = removeTodolistAC(todolistId)
         // dispatchToTodolistsReducer(action)
         // dispatchToTasksReducer(action)
         dispatch(action)
-    }
+    }, [])
 
 
-    function changeTodolistTitle(id: string, newTitle: string) {
+    const changeTodolistTitle = useCallback(function (id: string, newTitle: string) {
         const action = changeTodolistTitleAC(id, newTitle)
         // dispatchToTodolistsReducer(action)
         dispatch(action)
-    }
-
+    }, [])
 
     const addTodolist = useCallback((title: string) => {
         const action = addTodolistAC(title)
@@ -128,6 +122,7 @@ function AppWithRedux() {
         // dispatchToTasksReducer(action)
         dispatch(action)
     }, [])
+
 
     return (
         <div className="App">
