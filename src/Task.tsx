@@ -1,4 +1,4 @@
-import React, {ChangeEvent} from "react";
+import React, {ChangeEvent, useCallback} from "react";
 import {Checkbox, IconButton} from "@mui/material";
 import {EditableSpan} from "./EditableSpan";
 import {Delete} from "@mui/icons-material";
@@ -12,18 +12,20 @@ type TaskPropsType = {
     changeTaskTitle: (taskId: string, newTitle: string, todolistId: string) => void
 }
 
-export const Task = (props: TaskPropsType) => {
+export const Task = React.memo((props: TaskPropsType) => {
 
     const onRemoveHandler = () => {
         props.removeTask(props.task.id, props.todolistId)
     }
+
     const onChangeStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
         console.log(props.task.id + e.currentTarget.checked)
         props.changeTaskStatus(props.task.id, e.currentTarget.checked, props.todolistId)
     }
-    const onChangeTitleHandler = (newValue: string) => {
+
+    const onChangeTitleHandler = useCallback((newValue: string) => {
         props.changeTaskTitle(props.task.id, newValue, props.todolistId)
-    }
+    }, [props.changeTaskTitle, props.task.id, props.todolistId])
 
     return (
         <div key={props.task.id} className={props.task.isDone ? "is-done" : ""}>
@@ -43,4 +45,4 @@ export const Task = (props: TaskPropsType) => {
 
     )
 
-}
+})
