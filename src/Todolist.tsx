@@ -25,24 +25,22 @@ export type TaskType = {
     title: string
     isDone: boolean
 }
-export const Todolist = React.memo(function(props: TodolistPropsType) {
+export const Todolist = React.memo(function (props: TodolistPropsType) {
 
     console.log("TOdolist")
 
     const onAllClickHandler = useCallback(() => {
         props.changeFilter("all", props.id)
-    },[props.changeFilter, props.id])
+    }, [props.changeFilter, props.id])
 
-    const onActiveClickHandler =useCallback( () => {
+    const onActiveClickHandler = useCallback(() => {
         props.changeFilter("active", props.id)
-    },[props.changeFilter, props.id])
+    }, [props.changeFilter, props.id])
 
 
-    const onComplitedClickHandler =useCallback(() => {
+    const onComplitedClickHandler = useCallback(() => {
         props.changeFilter("complited", props.id)
-    },[props.changeFilter,props.id])
-
-
+    }, [props.changeFilter, props.id])
 
 
     const removeTodolist = () => {
@@ -52,15 +50,15 @@ export const Todolist = React.memo(function(props: TodolistPropsType) {
 
     const addTask = useCallback((title: string) => {
         props.addTask(title, props.id)
-    }, [props.addTask,props.id])
+    }, [props.addTask, props.id])
 
 
-    const changeTodolistTitle = (newTitle: string) => {
+    const changeTodolistTitle = useCallback((newTitle: string) => {
         props.changeTodolistTitle(props.id, newTitle)
-    }
+    }, [props.changeTodolistTitle, props.id])
 
 
-    let tasksForTodolist=props.tasks
+    let tasksForTodolist = props.tasks
 
     if (props.filter === "complited") {
         tasksForTodolist = props.tasks.filter(t => t.isDone === true)
@@ -69,7 +67,6 @@ export const Todolist = React.memo(function(props: TodolistPropsType) {
     if (props.filter === "active") {
         tasksForTodolist = props.tasks.filter(t => t.isDone === false)
     }
-
 
 
     return (
