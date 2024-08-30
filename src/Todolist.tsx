@@ -1,9 +1,10 @@
-import React, {ChangeEvent, useCallback} from "react";
+import React, {useCallback} from "react";
 import {FilterValuesType} from "./App";
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
-import {Button, Checkbox, IconButton} from "@mui/material";
+import {Button, IconButton} from "@mui/material";
 import {Delete} from "@mui/icons-material";
+import {Task} from "./Task";
 
 
 type TodolistPropsType = {
@@ -79,36 +80,14 @@ export const Todolist = React.memo(function (props: TodolistPropsType) {
             <AddItemForm addItem={addTask}/>
             <div>
                 {
-                    tasksForTodolist.map(t => {
+                    tasksForTodolist.map(t => <Task key={t.id}
+                                                    todolistId={props.id}
+                                                    task={t}
+                                                    changeTaskStatus={props.changeTaskStatus}
+                                                    removeTask={props.removeTask}
+                                                    changeTaskTitle={props.changeTaskTitle}
 
-                        const onRemoveHandler = () => {
-                            props.removeTask(t.id, props.id)
-                        }
-                        const onChangeStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
-                            console.log(t.id + e.currentTarget.checked)
-                            props.changeTaskStatus(t.id, e.currentTarget.checked, props.id)
-                        }
-                        const onChangeTitleHandler = (newValue: string) => {
-                            props.changeTaskTitle(t.id, newValue, props.id)
-                        }
-
-                        return (
-                            <div key={t.id} className={t.isDone ? "is-done" : ""}>
-                                {/*<input*/}
-                                {/*    type="checkbox"*/}
-                                {/*    onChange={onChangeStatusHandler}*/}
-                                {/*    checked={t.isDone}/>*/}
-                                <Checkbox onChange={onChangeStatusHandler} checked={t.isDone} defaultChecked/>
-
-                                {/*<span>{t.title}-----</span>*/}
-                                <EditableSpan title={t.title} onChange={onChangeTitleHandler}/>
-
-                                <IconButton aria-label="delete" onClick={onRemoveHandler}>
-                                    <Delete/>
-                                </IconButton>
-                            </div>
-                        )
-                    })
+                    />)
                 }
             </div>
             <div>
@@ -125,4 +104,3 @@ export const Todolist = React.memo(function (props: TodolistPropsType) {
         </div>
     )
 })
-
