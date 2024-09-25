@@ -17,7 +17,7 @@ export type ChangeTodolistTitleActionType = {
     title: string
 }
 export type ChangeTodolistFilterActionType = {
-    type: "CHANGE-TODOLIST-FITER"
+    type: "CHANGE-TODOLIST-FIlTER"
     id: string
     filter: FilterValuesType
 }
@@ -29,21 +29,25 @@ type ActionsType =
     | ChangeTodolistFilterActionType
 
 
-export let todolistId1 = v1()//"gjjj-k22-nmk''
-export let todolistId2 = v1()
+// export let todolistId1 = v1()//"gjjj-k22-nmk''
+// export let todolistId2 = v1()
+//
+// const initialState:Array<TodolistType>=[
+//     {
+//         id: todolistId1,
+//         title: "What to learn?",
+//         filter: "all",
+//     },
+//     {
+//         id: todolistId2,
+//         title: "What to buy?",
+//         filter: "all",
+//     },
+// ]
 
-const initialState:Array<TodolistType>=[
-    {
-        id: todolistId1,
-        title: "What to learn?",
-        filter: "all",
-    },
-    {
-        id: todolistId2,
-        title: "What to buy?",
-        filter: "all",
-    },
-]
+
+const initialState: Array<TodolistType> =  []
+
 
 export const todolistsReducer = (state: Array<TodolistType>=initialState, action: ActionsType): Array<TodolistType> => {
     switch (action.type) {
@@ -69,7 +73,7 @@ export const todolistsReducer = (state: Array<TodolistType>=initialState, action
             return [...state]
         }
 
-        case "CHANGE-TODOLIST-FITER": {
+        case "CHANGE-TODOLIST-FIlTER": {
             let todolist = state.find(tl => tl.id === action.id)
             if (todolist) {
                 todolist.filter = action.filter
@@ -95,7 +99,7 @@ export const changeTodolistTitleAC = (id: string, title: string): ChangeTodolist
 }
 
 export const changeTodolistFilterAC = (id: string, filter: FilterValuesType): ChangeTodolistFilterActionType => {
-    return {type: "CHANGE-TODOLIST-FITER", filter: filter, id: id}
+    return {type: "CHANGE-TODOLIST-FIlTER", filter: filter, id: id}
 }
 
 
