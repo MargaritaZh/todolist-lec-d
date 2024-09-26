@@ -1,17 +1,16 @@
 import React, {useEffect, useState} from 'react'
-import axios from "axios";
 import {todolistsAPI} from "../api/todolists-api";
 
 export default {
     title: 'API'
 }
 
-const settings = {
-    withCredentials: true,
-    headers: {
-        "API-KEY": "5a87c1c3-beed-460d-b44d-58b57594e4b7"
-    }
-}
+// const settings = {
+//     withCredentials: true,
+//     headers: {
+//         "API-KEY": "5a87c1c3-beed-460d-b44d-58b57594e4b7"
+//     }
+// }
 
 export const GetTodolists = () => {
     const [state, setState] = useState<any>({name: "Dimach"})
@@ -34,6 +33,8 @@ export const CreateTodolist = () => {
     useEffect(() => {
 
         todolistsAPI.createTodolist("New Title").then(res => {
+
+            // debugger
             setState(res.data)
         })
     }, [])
