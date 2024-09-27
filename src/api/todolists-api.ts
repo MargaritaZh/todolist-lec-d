@@ -1,6 +1,4 @@
 import axios from "axios";
-import {number, string} from "prop-types";
-
 
 const settings = {
     withCredentials: true,
@@ -13,7 +11,6 @@ const instance = axios.create({
     baseURL: "https://social-network.samuraijs.com/api/1.1/",
     ...settings
 })
-
 
 export type TodolistType = {
     id: string
@@ -62,34 +59,20 @@ export type TaskType = {
     order: number
     addedDate: string
 }
+
 export type UpdateTaskModelType = {
     title: string
     description: string
-    completed: boolean
     status: number
     priority: number
     startDate: string
     deadline: string
 }
 
-
 type GetTasksResponse = {
     items: Array<TaskType>
     totalCount: number
     error: string | null
-}
-
-type CreateTaskResponse = {
-    id:string
-    title:string
-    description:string|null
-    todoListId:string
-    order:number
-    status:number
-    priority:number
-    startDate:string|null
-    deadline:string|null
-    addedDate: string
 }
 
 
@@ -114,18 +97,18 @@ export const todolistsAPI = {
     getTasks(todolistId: string) {
         return instance.get<GetTasksResponse>(`todo-lists/${todolistId}/tasks`)
     },
-    createTask(todolistId: string, newTitle: string) {
-        const promise = instance.post<CreateTaskResponse>(`todo-lists/${todolistId}/tasks`, {title: newTitle})
+    createTask(todolistId: string, taskTitle: string) {
+        const promise = instance.post<ResponseType<TaskType>>(`todo-lists/${todolistId}/tasks`, {title: taskTitle})
         return promise
     },
     deleteTask(todolistId: string, taskId: string) {
         return instance.delete<ResponseType>(`todo-lists/${todolistId}/tasks/${taskId}`)
     },
-    // updateTask(todolistId:string,taskId:string,model:UpdateTaskModelType){
-    //     const promise = instance.put<>(
-    //         `todo-lists/${id}`, {title: title})
-    //     return promise
-    // }
+    updateTask(todolistId:string,taskId:string,model:UpdateTaskModelType){
+        const promise = instance.put<ResponseType>(
+            `todo-lists/${todolistId}/tasks/${taskId}`,model)
+        return promise
+    }
 }
 
 
