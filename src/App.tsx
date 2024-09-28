@@ -1,19 +1,14 @@
 import React, {useState} from 'react';
 import './App.css';
-import {TaskType, Todolist} from "./Todolist";
+import {Todolist} from "./Todolist";
 import {v1} from "uuid";
 import {AddItemForm} from "./AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@mui/material";
 import {Menu} from "@mui/icons-material";
+import {TaskPriorities, TaskStatuses, TaskType} from "./api/todolists-api";
+import {FilterValuesType, TodolistDomainType} from "./state/todolists-reducer";
 
 
-export type  FilterValuesType = "all" | "active" | "complited"
-
-export type TodolistType = {
-    id: string,
-    title: string,
-    filter: FilterValuesType,
-}
 
 export type TaskStateType = {
     [key: string]: Array<TaskType>
@@ -26,16 +21,20 @@ function App() {
     let todolistId1 = v1()//"gjjj-k22-nmk''
     let todolistId2 = v1()
 
-    let [todolists, setTodolists] = useState<Array<TodolistType>>([
+    let [todolists, setTodolists] = useState<Array<TodolistDomainType>>([
         {
             id: todolistId1,
             title: "What to learn?",
             filter: "all",
+            addedDate:"",
+            order:0,
         },
         {
             id: todolistId2,
             title: "What to buy?",
             filter: "all",
+            addedDate:"",
+            order:0,
         },
     ])
 
@@ -79,16 +78,13 @@ function App() {
     let [tasksObj, setTasksObj] = useState<TaskStateType>(
         {
             [todolistId1]: [
-
-                {id: v1(), title: "HTML & CSS", isDone: true},
-                {id: v1(), title: "JS & TS", isDone: true},
-                {id: v1(), title: "ReactJS", isDone: false},
-                {id: v1(), title: "Rest API", isDone: false},
-                {id: v1(), title: "GraphQL", isDone: false}
+                {id: v1(), title: "HTML & CSS", status: TaskStatuses.Completed, todoListId:todolistId1, startDate:"", deadline:"", addedDate:"", order:0,priority:TaskPriorities.Low,description:""},
+                {id: v1(), title: "JS & TS", status:  TaskStatuses.Completed,todoListId:todolistId1,startDate:"",deadline:"", addedDate:"", order:0,priority:TaskPriorities.Low,description:""},
             ],
             [todolistId2]: [
-                {id: v1(), title: "Book", isDone: false},
-                {id: v1(), title: "Milk", isDone: true},
+                {id: v1(), title: "Book", status:  TaskStatuses.New,todoListId:todolistId2,startDate:"",deadline:"", addedDate:"", order:0,priority:TaskPriorities.Low,description:""},
+
+                {id: v1(), title: "Milk", status:  TaskStatuses.Completed,todoListId:todolistId2,startDate:"",deadline:"", addedDate:"", order:0,priority:TaskPriorities.Low,description:""},
             ],
         }
     )
