@@ -39,20 +39,6 @@ type ActionsType =
 
 const initialState: TaskStateType = {}
 
-// const initialState:TaskStateType={
-//     [todolistId1]: [
-//
-//         {id: v1(), title: "HTML & CSS", isDone: true},
-//         {id: v1(), title: "JS & TS", isDone: true},
-//         {id: v1(), title: "ReactJS", isDone: false},
-//         {id: v1(), title: "Rest API", isDone: false},
-//         {id: v1(), title: "GraphQL", isDone: false}
-//     ],
-//     [todolistId2]: [
-//         {id: v1(), title: "Book", isDone: false},
-//         {id: v1(), title: "Milk", isDone: true},
-//     ],
-// }
 
 
 export const tasksReducer = (state: TaskStateType = initialState, action: ActionsType): TaskStateType => {
@@ -146,7 +132,7 @@ export const tasksReducer = (state: TaskStateType = initialState, action: Action
                 ...state,
                 [action.todolistId]: state[action.todolistId].map(el => el.id === action.taskId ? {
                     ...el,
-                    isDone: action.status
+                    status: action.status
                 } : el)
             }
         }

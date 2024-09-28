@@ -23,8 +23,9 @@ export const Task = React.memo((props: TaskPropsType) => {
 
         //Так как у нас boolean значение, чтобы увязать с TaskStatuses используем тернарный оператор
 
-        let newIsDoneValue=e.currentTarget.checked
-        props.changeTaskStatus(props.task.id,newIsDoneValue? TaskStatuses.Completed:TaskStatuses.New, props.todolistId)
+        let newIsDoneValue = e.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New
+
+        props.changeTaskStatus(props.task.id, newIsDoneValue, props.todolistId)
     }
 
     const onChangeTitleHandler = useCallback((newValue: string) => {
@@ -32,12 +33,18 @@ export const Task = React.memo((props: TaskPropsType) => {
     }, [props.changeTaskTitle, props.task.id, props.todolistId])
 
     return (
-        <div key={props.task.id} className={props.task.status===TaskStatuses.Completed ? "is-done" : ""}>
+
+        <div key={props.task.id} className={props.task.status === TaskStatuses.Completed ? "is-done" : ""}>
             {/*<input*/}
             {/*    type="checkbox"*/}
             {/*    onChange={onChangeStatusHandler}*/}
             {/*    checked={t.isDone}/>*/}
-            <Checkbox onChange={onChangeStatusHandler} checked={props.task.status===TaskStatuses.Completed} defaultChecked/>
+            <Checkbox
+                onChange={onChangeStatusHandler}
+
+                checked={props.task.status === TaskStatuses.Completed}
+                color={"primary"}
+            />
 
             {/*<span>{t.title}-----</span>*/}
             <EditableSpan title={props.task.title} onChange={onChangeTitleHandler}/>
