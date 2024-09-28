@@ -5,7 +5,7 @@ import {v1} from "uuid";
 import {AddItemForm} from "./AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@mui/material";
 import {Menu} from "@mui/icons-material";
-import {TaskPriorities, TaskStatuses, TaskType} from "./api/todolists-api";
+import {TaskPriorities, TaskStatuses, TaskType, TodolistType} from "./api/todolists-api";
 import {FilterValuesType, TodolistDomainType} from "./state/todolists-reducer";
 
 
@@ -102,8 +102,16 @@ function App() {
     function addTask(title: string, todolistId: string) {
         let newTask = {
             id: v1(),
+            todoListId:todolistId,
             title: title,
-            isDone: false
+
+            status: TaskStatuses.New,
+            startDate:"",
+            deadline:"",
+            addedDate:"",
+            order:0,
+            priority:TaskPriorities.Low,
+            description:"",
         }
         //нахожу нужный массив по ключу в объекте объектов
         let tasks = tasksObj[todolistId]
@@ -116,14 +124,14 @@ function App() {
         setTasksObj({...tasksObj})
     }
 
-    function changeStatus(taskId: string, isDone: boolean, todolistId: string) {
+    function changeStatus(taskId: string, status: TaskStatuses, todolistId: string) {
         //достаем массив тасок из конкретного тодолиста из объекта объектов
         let tasks = tasksObj[todolistId]
 
         let task = tasks.find(t => t.id === taskId
         )
         if (task) {
-            task.isDone = isDone
+            task.status = status
             //одна таска изменилась в массиве
             setTasksObj({...tasksObj})
         }
@@ -145,17 +153,19 @@ function App() {
     }
 
     function addTodolist(title: string) {
-        let todolist: TodolistType = {
+        let newTodolist: TodolistDomainType = {
             id: v1(),
             filter: "all",
             title: title,
+            addedDate: "",
+            order: 0,
         }
 
-        setTodolists([todolist, ...todolists])
+        setTodolists([newTodolist, ...todolists])
 
         setTasksObj({
             ...tasksObj,
-            [todolist.id]: []
+            [newTodolist.id]: []
         })
     }
 
@@ -188,12 +198,12 @@ function App() {
 
                         let tasksForTodolist = tasksObj[todolist.id]
 
-                        if (todolist.filter === "complited") {
-                            tasksForTodolist = tasksForTodolist.filter(t => t.isDone === true)
+                        if (todolist.filter === "completed") {
+                            tasksForTodolist = tasksForTodolist.filter(t => t.status === TaskStatuses.New)
 
                         }
                         if (todolist.filter === "active") {
-                            tasksForTodolist = tasksForTodolist.filter(t => t.isDone === false)
+                            tasksForTodolist = tasksForTodolist.filter(t => t.status === TaskStatuses.Completed)
 
                         }
 

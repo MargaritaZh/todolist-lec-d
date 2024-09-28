@@ -2,13 +2,14 @@ import React, {ChangeEvent, useCallback} from "react";
 import {Checkbox, IconButton} from "@mui/material";
 import {EditableSpan} from "./EditableSpan";
 import {Delete} from "@mui/icons-material";
-import {TaskType} from "./Todolist";
+import {TaskStatuses, TaskType} from "./api/todolists-api";
+
 
 type TaskPropsType = {
     todolistId: string
     task: TaskType
     removeTask: (id: string, todolistId: string) => void
-    changeTaskStatus: (taskId: string, isDone: boolean, todolistId: string) => void
+    changeTaskStatus: (taskId: string, status: TaskStatuses, todolistId: string) => void
     changeTaskTitle: (taskId: string, newTitle: string, todolistId: string) => void
 }
 
@@ -19,8 +20,11 @@ export const Task = React.memo((props: TaskPropsType) => {
     }
 
     const onChangeStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        console.log(props.task.id + e.currentTarget.checked)
-        props.changeTaskStatus(props.task.id, e.currentTarget.checked, props.todolistId)
+
+        //Так как у нас boolean значение, чтобы увязать с TaskStatuses используем тернарный оператор
+
+        let newIsDoneValue=e.currentTarget.checked
+        props.changeTaskStatus(props.task.id,newIsDoneValue? TaskStatuses.Completed:TaskStatuses.New, props.todolistId)
     }
 
     const onChangeTitleHandler = useCallback((newValue: string) => {
@@ -28,12 +32,12 @@ export const Task = React.memo((props: TaskPropsType) => {
     }, [props.changeTaskTitle, props.task.id, props.todolistId])
 
     return (
-        <div key={props.task.id} className={props.task.isDone ? "is-done" : ""}>
+        <div key={props.task.id} className={props.task.status===TaskStatuses.Completed ? "is-done" : ""}>
             {/*<input*/}
             {/*    type="checkbox"*/}
             {/*    onChange={onChangeStatusHandler}*/}
             {/*    checked={t.isDone}/>*/}
-            <Checkbox onChange={onChangeStatusHandler} checked={props.task.isDone} defaultChecked/>
+            <Checkbox onChange={onChangeStatusHandler} checked={props.task.status===TaskStatuses.Completed} defaultChecked/>
 
             {/*<span>{t.title}-----</span>*/}
             <EditableSpan title={props.task.title} onChange={onChangeTitleHandler}/>

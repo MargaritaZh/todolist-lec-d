@@ -1,6 +1,6 @@
 import React, {useReducer} from 'react';
 import './App.css';
-import {TaskType, Todolist} from "./Todolist";
+import {Todolist} from "./Todolist";
 import {v1} from "uuid";
 import {AddItemForm} from "./AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@mui/material";
@@ -8,20 +8,14 @@ import {Menu} from "@mui/icons-material";
 import {
     addTodolistAC,
     changeTodolistFilterAC,
-    changeTodolistTitleAC,
+    changeTodolistTitleAC, FilterValuesType,
     removeTodolistAC,
     todolistsReducer
 } from "./state/todolists-reducer";
 import {addTaskAC, changeStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from "./state/tasks-reducer";
+import {TaskPriorities, TaskStatuses, TaskType} from "./api/todolists-api";
 
 
-export type  FilterValuesType = "all" | "active" | "complited"
-
-export type TodolistType = {
-    id: string,
-    title: string,
-    filter: FilterValuesType,
-}
 
 export type TaskStateType = {
     [key: string]: Array<TaskType>
@@ -38,11 +32,15 @@ function AppWithReducers() {
             id: todolistId1,
             title: "What to learn?",
             filter: "all",
+            addedDate:"",
+            order:0,
         },
         {
             id: todolistId2,
             title: "What to buy?",
             filter: "all",
+            addedDate:"",
+            order:0,
         },
     ])
 
@@ -50,15 +48,13 @@ function AppWithReducers() {
         {
             [todolistId1]: [
 
-                {id: v1(), title: "HTML & CSS", isDone: true},
-                {id: v1(), title: "JS & TS", isDone: true},
-                {id: v1(), title: "ReactJS", isDone: false},
-                {id: v1(), title: "Rest API", isDone: false},
-                {id: v1(), title: "GraphQL", isDone: false}
+                {id: v1(), title: "HTML & CSS", status:  TaskStatuses.New,todoListId:todolistId1,startDate:"",deadline:"", addedDate:"", order:0,priority:TaskPriorities.Low,description:""},
+                {id: v1(), title: "JS & TS", status:  TaskStatuses.New,todoListId:todolistId1,startDate:"",deadline:"", addedDate:"", order:0,priority:TaskPriorities.Low,description:""},
+
             ],
             [todolistId2]: [
-                {id: v1(), title: "Book", isDone: false},
-                {id: v1(), title: "Milk", isDone: true},
+                {id: v1(), title: "Book", status:  TaskStatuses.Completed,todoListId:todolistId2,startDate:"",deadline:"", addedDate:"", order:0,priority:TaskPriorities.Low,description:""},
+                {id: v1(), title: "Milk", status:  TaskStatuses.New,todoListId:todolistId2,startDate:"",deadline:"", addedDate:"", order:0,priority:TaskPriorities.Low,description:""},
             ],
         }
     )
@@ -76,8 +72,8 @@ function AppWithReducers() {
     }
 
 
-    function changeStatus(taskId: string, isDone: boolean, todolistId: string) {
-        const action = changeStatusAC(taskId, isDone, todolistId)
+    function changeStatus(taskId: string, status: TaskStatuses, todolistId: string) {
+        const action = changeStatusAC(taskId, status, todolistId)
         dispatchToTasksReducer(action)
     }
 
@@ -140,16 +136,14 @@ function AppWithReducers() {
                     {todolists.map(todolist => {
 
                         let tasksForTodolist = tasksObj[todolist.id]
-
-                        if (todolist.filter === "complited") {
-                            tasksForTodolist = tasksForTodolist.filter(t => t.isDone === true)
-
-                        }
                         if (todolist.filter === "active") {
-                            tasksForTodolist = tasksForTodolist.filter(t => t.isDone === false)
+                            tasksForTodolist = tasksForTodolist.filter(t => t.status === TaskStatuses.New)
 
                         }
+                        if (todolist.filter === "completed") {
+                            tasksForTodolist = tasksForTodolist.filter(t => t.status === TaskStatuses.Completed)
 
+                        }
                         return (<Grid item>
                                 <Paper style={{padding: "10px"}}>
                                     <Todolist key={todolist.id}
