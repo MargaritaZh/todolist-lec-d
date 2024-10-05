@@ -1,7 +1,8 @@
 import {TaskStateType} from "../App";
 import {v1} from "uuid";
 import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType} from "./todolists-reducer";
-import {TaskPriorities, TaskStatuses} from "../api/todolists-api";
+import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI} from "../api/todolists-api";
+import {Dispatch} from "redux";
 
 
 export type RemoveTaskActionType = {
@@ -29,12 +30,12 @@ export type ChangeTaskTitleActionType = {
     todolistId: string
 }
 
-// export type SetTaskActionType = {
-//     type: "CHANGE-TASK-TITLE"
-//     taskId: string
-//     newTaskTitle: string
-//     todolistId: string
-// }
+export type SetTasksActionType = {
+    type: "SET-TASKS"
+    tasks: Array<TaskType>
+    todolistId: string
+
+}
 
 
 type ActionsType =
@@ -42,7 +43,7 @@ type ActionsType =
     | AddTaskActionType
     | ChangeTaskStatusActionType
     | ChangeTaskTitleActionType
-    | AddTodolistActionType | RemoveTodolistActionType | SetTodolistsActionType
+    | AddTodolistActionType | RemoveTodolistActionType | SetTodolistsActionType | SetTasksActionType
 
 
 const initialState: TaskStateType = {}
@@ -81,7 +82,6 @@ export const tasksReducer = (state: TaskStateType = initialState, action: Action
             // setTasksObj({...tasksObj})
 
 
-
             //я написала
             return {
                 ...state,
@@ -106,7 +106,6 @@ export const tasksReducer = (state: TaskStateType = initialState, action: Action
             //             //одна таска изменилась в массиве
             //             setTasksObj({...tasksObj})
             //         }
-
 
 
             //я написала
@@ -161,6 +160,12 @@ export const tasksReducer = (state: TaskStateType = initialState, action: Action
             })
             return copyState
         }
+        ////////////////////
+        case "SET-TASKS": {
+            const copyState = {...state}
+            copyState[action.todolistId] = action.tasks
+            return copyState
+        }
 
 
         default:
@@ -184,4 +189,23 @@ export const changeStatusAC = (taskId: string, status: TaskStatuses, todolistId:
 export const changeTaskTitleAC = (taskId: string, newTaskTitle: string, todolistId: string): ChangeTaskTitleActionType => {
 
     return {type: "CHANGE-TASK-TITLE", taskId: taskId, newTaskTitle: newTaskTitle, todolistId: todolistId}
+}
+
+/////////////////
+
+export const SetTasksAC = (tasks: Array<TaskType>,todolistId: string ): SetTasksActionType => {
+    return {type: "SET-TASKS",  tasks:tasks, todolistId: todolistId,}
+}
+
+
+// Создадим функцию, САНКУ-задача сделать асинх. работу, запросить данные и передать в Redux
+
+export const fetchTasksTC = (todolistId:string) => {
+
+    return (dispatch: Dispatch) => {
+        todolistsAPI.getTasks(todolistId)
+            .then((res) => {
+                dispatch(SetTasksAC(res.data.items,todolistId))
+            })
+    }
 }

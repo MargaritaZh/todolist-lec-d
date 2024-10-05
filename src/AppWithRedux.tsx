@@ -66,7 +66,7 @@ function AppWithRedux() {
 
 
 
-    //Вызовем функцию САНКУ Thunk и передадим в нее dispatch
+
     useEffect(()=>{
         // @ts-ignore
         dispatch(fetchTodolistsTC())
