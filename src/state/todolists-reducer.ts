@@ -1,5 +1,6 @@
 import {v1} from "uuid";
-import {TodolistType} from "../api/todolists-api";
+import {todolistsAPI, TodolistType} from "../api/todolists-api";
+import {Dispatch} from "redux";
 
 export type RemoveTodolistActionType = {
     type: "REMOVE-TODOLIST"
@@ -31,7 +32,8 @@ type ActionsType =
     RemoveTodolistActionType
     | AddTodolistActionType
     | ChangeTodolistTitleActionType
-    | ChangeTodolistFilterActionType | SetTodolistsActionType
+    | ChangeTodolistFilterActionType
+    | SetTodolistsActionType
 
 
 export type  FilterValuesType = "all" | "active" | "completed"
@@ -112,6 +114,18 @@ export const setTodolistsAC = (todolists: Array<TodolistType>): SetTodolistsActi
     return {type: "SET-TODOLISTS", todolists: todolists}
 }
 
+// Создадим функцию, САНКУ-задача сделать асинх. работу, запросить данные и передать в Redux
+
+export const fetchTodolistsTC = () => {
+
+
+    return (dispatch: Dispatch) => {
+        todolistsAPI.getTodolists()
+            .then((res) => {
+                dispatch(setTodolistsAC(res.data))
+            })
+    }
+}
 
 
 

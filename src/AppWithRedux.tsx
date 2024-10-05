@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import './App.css';
 import {Todolist} from "./Todolist";
 import {AddItemForm} from "./AddItemForm";
@@ -7,7 +7,7 @@ import {Menu} from "@mui/icons-material";
 import {
     addTodolistAC,
     changeTodolistFilterAC,
-    changeTodolistTitleAC, FilterValuesType,
+    changeTodolistTitleAC, fetchTodolistsTC, FilterValuesType,
     removeTodolistAC, TodolistDomainType,
 } from "./state/todolists-reducer";
 import {addTaskAC, changeStatusAC, changeTaskTitleAC, removeTaskAC} from "./state/tasks-reducer";
@@ -63,6 +63,15 @@ function AppWithRedux() {
     //         ],
     //     }
     // )
+
+
+
+    //Вызовем функцию САНКУ Thunk и передадим в нее dispatch
+    useEffect(()=>{
+        // @ts-ignore
+        dispatch(fetchTodolistsTC())
+    },[])
+
 
 
     const removeTask = useCallback(function (id: string, todolistId: string) {

@@ -29,6 +29,14 @@ export type ChangeTaskTitleActionType = {
     todolistId: string
 }
 
+// export type SetTaskActionType = {
+//     type: "CHANGE-TASK-TITLE"
+//     taskId: string
+//     newTaskTitle: string
+//     todolistId: string
+// }
+
+
 type ActionsType =
     RemoveTaskActionType
     | AddTaskActionType
@@ -48,13 +56,6 @@ export const tasksReducer = (state: TaskStateType = initialState, action: Action
             // let filteredTasks = tasks.filter(t => t.id !== id)
             // tasksObj[todolistId] = filteredTasks
             // setTasksObj({...tasksObj})
-
-            //написал димыч
-            // const stateCopy = {...state}
-            // const tasks = state[action.todolistId]
-            // const filteredTasks = tasks.filter(t => t.id !== action.taskId)
-            // stateCopy[action.todolistId] = filteredTasks
-            // return stateCopy
 
             //написала я
             return {
@@ -79,17 +80,7 @@ export const tasksReducer = (state: TaskStateType = initialState, action: Action
             //set копию измененного объекта,чтобы произошла отрисовка
             // setTasksObj({...tasksObj})
 
-            //как димыч
-            // const stateCopy={...state}
-            // let newTask = {
-            //     id: v1(),
-            //     title: action.taskTitle,
-            //     isDone: false
-            // }
-            // let tasks = state[action.todolistId]
-            // let newTasks = [newTask, ...tasks]
-            // stateCopy[action.todolistId] = newTasks
-            // return stateCopy
+
 
             //я написала
             return {
@@ -116,15 +107,7 @@ export const tasksReducer = (state: TaskStateType = initialState, action: Action
             //             setTasksObj({...tasksObj})
             //         }
 
-            //как димыч пишет
-            // const copyState = {...state}
-            // let tasks = copyState[action.todolistId]
-            // let task = tasks.find(t => t.id === action.taskId
-            // )
-            // if (task) {
-            //     task.isDone = action.isDone
-            // }
-            // return copyState
+
 
             //я написала
             return {
@@ -147,15 +130,6 @@ export const tasksReducer = (state: TaskStateType = initialState, action: Action
             //     setTasksObj({...tasksObj})
             // }
 
-            //как димыч пишет
-            //     const copyState={...state}
-            //     let tasks = copyState[action.todolistId]
-            //     let task = tasks.find(t => t.id === action.taskId
-            //     )
-            //     if (task) {
-            //         task.title = action.newTaskTitle
-            //     }
-            //     return copyState
 
 //я написала
             return {
