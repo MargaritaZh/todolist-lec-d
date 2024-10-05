@@ -2,7 +2,7 @@ import {v1} from 'uuid'
 import {
     addTodolistAC, changeTodolistFilterAC,
     changeTodolistTitleAC, FilterValuesType,
-    removeTodolistAC, TodolistDomainType,
+    removeTodolistAC, setTodolistsAC, TodolistDomainType,
     todolistsReducer
 } from "./todolists-reducer"
 
@@ -37,7 +37,6 @@ test("correct todolist should be removed", () => {
     expect(endState.length).toBe(1)
     expect(endState[0].id).toBe(todolistID2)
 })
-
 
 test("correct todolist should be added", () => {
 
@@ -100,7 +99,6 @@ test("correct todolist should change its name", () => {
     expect(endState[1].title).toBe(newTodolistTitle)
 })
 
-
 test("correct filter of todolist should be changed", () => {
 
     let todolistID1 = v1()
@@ -139,6 +137,37 @@ test("correct filter of todolist should be changed", () => {
     expect(endState[0].filter).toBe("all")
     expect(endState[1].filter).toBe(newFilter)
 })
+
+test("todolists should be set to do state", () => {
+
+
+    let todolistID1 = v1()
+    let todolistID2 = v1()
+
+    const startState: TodolistDomainType[] = [
+        {
+            id: todolistID1,
+            title: 'What to learn',
+            filter: 'all',
+            addedDate: "",
+            order: 0,
+        },
+        {
+            id: todolistID2,
+            title: 'What to buy',
+            filter: 'all',
+            addedDate: "",
+            order: 0,
+        },
+    ]
+
+    const action = setTodolistsAC(startState)
+    const endState = todolistsReducer([], action)
+
+    expect(endState.length).toBe(2)
+
+})
+
 
 
 
