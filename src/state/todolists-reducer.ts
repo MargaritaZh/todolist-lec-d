@@ -8,8 +8,7 @@ export type RemoveTodolistActionType = {
 }
 export type AddTodolistActionType = {
     type: "ADD-TODOLIST"
-    title: string
-    todolistId: string
+    todolist: TodolistType
 }
 export type ChangeTodolistTitleActionType = {
     type: "CHANGE-TODOLIST-TITLE"
@@ -51,15 +50,11 @@ export const todolistsReducer = (state: Array<TodolistDomainType> = initialState
             return state.filter(todolist => todolist.id !== action.id)
         }
         case "ADD-TODOLIST": {
-            return [
-                {
-                    id: action.todolistId,
-                    title: action.title,
-                    filter: "all",
-                    addedDate: "",
-                    order: 0,
-
-                }, ...state]
+            const newTodolist: TodolistDomainType = {
+                ...action.todolist,
+                filter: "all"
+            }
+            return [newTodolist, ...state]
         }
         case "CHANGE-TODOLIST-TITLE": {
 
@@ -96,8 +91,8 @@ export const removeTodolistAC = (todolistId: string): RemoveTodolistActionType =
     return {type: "REMOVE-TODOLIST", id: todolistId}
 }
 
-export const addTodolistAC = (title: string): AddTodolistActionType => {
-    return {type: "ADD-TODOLIST", title: title, todolistId: v1()}
+export const addTodolistAC = (todolist: TodolistType): AddTodolistActionType => {
+    return {type: "ADD-TODOLIST", todolist: todolist}
 }
 
 export const changeTodolistTitleAC = (id: string, title: string): ChangeTodolistTitleActionType => {
@@ -127,6 +122,26 @@ export const fetchTodolistsTC = () => {
     }
 }
 
+export const removeTodolistTC = (todolistId: string) => {
 
+    return (dispatch: Dispatch) => {
+        todolistsAPI.deleteTodolist(todolistId).then(res => {
+            //сначала удалим тодолист на серере, и когда пришел ответ что удалился ,то и удалим из BLL
+            dispatch(removeTodolistAC(todolistId))
+        })
 
+    }
+}
+
+export const addTodolistTC = (title: string) => {
+
+    return (dispatch: Dispatch) => {
+        todolistsAPI.createTodolist(title).then(res => {
+            //сначала создадим на сервере нов тодолист, а когда придет ответ в BLL и т.д.
+            const newTodo = res.data.data.item
+            const action = addTodolistAC(newTodo)
+            dispatch(action)
+        })
+    }
+}
 
