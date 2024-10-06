@@ -16,7 +16,6 @@ import {addTaskAC, changeStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer
 import {TaskPriorities, TaskStatuses, TaskType} from "./api/todolists-api";
 
 
-
 export type TaskStateType = {
     [key: string]: Array<TaskType>
 }
@@ -32,15 +31,15 @@ function AppWithReducers() {
             id: todolistId1,
             title: "What to learn?",
             filter: "all",
-            addedDate:"",
-            order:0,
+            addedDate: "",
+            order: 0,
         },
         {
             id: todolistId2,
             title: "What to buy?",
             filter: "all",
-            addedDate:"",
-            order:0,
+            addedDate: "",
+            order: 0,
         },
     ])
 
@@ -48,13 +47,57 @@ function AppWithReducers() {
         {
             [todolistId1]: [
 
-                {id: v1(), title: "HTML & CSS", status:  TaskStatuses.New,todoListId:todolistId1,startDate:"",deadline:"", addedDate:"", order:0,priority:TaskPriorities.Low,description:""},
-                {id: v1(), title: "JS & TS", status:  TaskStatuses.New,todoListId:todolistId1,startDate:"",deadline:"", addedDate:"", order:0,priority:TaskPriorities.Low,description:""},
+                {
+                    id: v1(),
+                    title: "HTML & CSS",
+                    status: TaskStatuses.New,
+                    todoListId: todolistId1,
+                    startDate: "",
+                    deadline: "",
+                    addedDate: "",
+                    order: 0,
+                    priority: TaskPriorities.Low,
+                    description: ""
+                },
+                {
+                    id: v1(),
+                    title: "JS & TS",
+                    status: TaskStatuses.New,
+                    todoListId: todolistId1,
+                    startDate: "",
+                    deadline: "",
+                    addedDate: "",
+                    order: 0,
+                    priority: TaskPriorities.Low,
+                    description: ""
+                },
 
             ],
             [todolistId2]: [
-                {id: v1(), title: "Book", status:  TaskStatuses.Completed,todoListId:todolistId2,startDate:"",deadline:"", addedDate:"", order:0,priority:TaskPriorities.Low,description:""},
-                {id: v1(), title: "Milk", status:  TaskStatuses.New,todoListId:todolistId2,startDate:"",deadline:"", addedDate:"", order:0,priority:TaskPriorities.Low,description:""},
+                {
+                    id: v1(),
+                    title: "Book",
+                    status: TaskStatuses.Completed,
+                    todoListId: todolistId2,
+                    startDate: "",
+                    deadline: "",
+                    addedDate: "",
+                    order: 0,
+                    priority: TaskPriorities.Low,
+                    description: ""
+                },
+                {
+                    id: v1(),
+                    title: "Milk",
+                    status: TaskStatuses.New,
+                    todoListId: todolistId2,
+                    startDate: "",
+                    deadline: "",
+                    addedDate: "",
+                    order: 0,
+                    priority: TaskPriorities.Low,
+                    description: ""
+                },
             ],
         }
     )
@@ -69,15 +112,15 @@ function AppWithReducers() {
     function addTask(title: string, todolistId: string) {
         const action = addTaskAC({
             todoListId: todolistId,
-            title:title,
+            title: title,
             status: TaskStatuses.New,
-            addedDate:"",
-            deadline:"",
-            description:"",
-            order:0,
-            priority:0,
-            startDate:"",
-            id:"id exsists",
+            addedDate: "",
+            deadline: "",
+            description: "",
+            order: 0,
+            priority: 0,
+            startDate: "",
+            id: "id exsists",
         })
         dispatchToTasksReducer(action)
     }
@@ -115,7 +158,13 @@ function AppWithReducers() {
 
 
     function addTodolist(title: string) {
-        const action = addTodolistAC(title)
+        const action = addTodolistAC({
+            id: v1(),
+            addedDate: "",
+            order: 0,
+            title: title,
+        })
+
         dispatchToTodolistsReducer(action)
         dispatchToTasksReducer(action)
     }
