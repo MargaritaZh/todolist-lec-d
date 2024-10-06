@@ -12,8 +12,7 @@ export type RemoveTaskActionType = {
 }
 export type AddTaskActionType = {
     type: "ADD-TASK"
-    taskTitle: string
-    todolistId: string
+    task: TaskType
 
 }
 export type ChangeTaskStatusActionType = {
@@ -65,35 +64,21 @@ export const tasksReducer = (state: TaskStateType = initialState, action: Action
             }
         }
         case "ADD-TASK": {
-            //из App
-            // let newTask = {
-            //     id: v1(),
-            //     title: title,
-            //     isDone: false
-            // }
-            //нахожу нужный массив по ключу в объекте объектов
-            // let tasks = tasksObj[todolistId]
-            //добавляю в массив новую таску
-            // let newTasks = [newTask, ...tasks]
-            //перезаписываю свойство в объекте по КЛЮЧУ
-            // НЕЛЬЗЯ ТАК tasksObj."rrre-3jj-gfhgf" = newTasks
-            // tasksObj[todolistId] = newTasks
-            //set копию измененного объекта,чтобы произошла отрисовка
-            // setTasksObj({...tasksObj})
+            //копию текущего состояния
+            const stateCopy = {...state}
 
+            // извлекаем новое (task) из объекта action
+            const newTask = action.task
 
-            //я написала
-            return {
-                ...state,
-                [action.todolistId]: [{
-                    id: v1(), title: action.taskTitle, status: TaskStatuses.New,
-                    todoListId: action.todolistId,
-                    startDate: "",
-                    deadline: "",
-                    addedDate: "", order: 0, priority: TaskPriorities.Low, description: ""
-                }, ...state[action.todolistId]]
-            }
+            //получаем список задач (tasks) для конкретного todoListId из скопированного состояния (stateCopy). Предполагается, что состояние (state) представляет собой объект, где ключами являются идентификаторы списков задач (todoListId), а значениями — массивы задач.
+            const tasks = stateCopy[newTask.todoListId]
 
+            //создаем новый массив задач (newTasks), который включает в себя новую задачу (newTask) и все задачи из текущего списка (tasks).
+            const newTasks = [newTask, ...tasks]
+
+            //обновляем копию состояния (stateCopy), заменяя старый список задач (tasks) новым списком (newTasks) для конкретного todoListId.
+            stateCopy[newTask.todoListId] = newTasks
+            return stateCopy
         }
         case "CHANGE-TASK-STATUS": {
             //из App  //достаем массив тасок из конкретного тодолиста из объекта объектов
@@ -177,8 +162,8 @@ export const removeTaskAC = (taskId: string, todolistId: string): RemoveTaskActi
     return {type: "REMOVE-TASK", todolistId: todolistId, taskId: taskId}
 }
 
-export const addTaskAC = (taskTitle: string, todolistId: string): AddTaskActionType => {
-    return {type: "ADD-TASK", taskTitle: taskTitle, todolistId: todolistId}
+export const addTaskAC = (task: TaskType): AddTaskActionType => {
+    return {type: "ADD-TASK", task: task}
 }
 
 export const changeStatusAC = (taskId: string, status: TaskStatuses, todolistId: string): ChangeTaskStatusActionType => {
@@ -210,7 +195,7 @@ export const fetchTasksTC = (todolistId: string) => {
     }
 }
 
-export const deleteTaskTC = ( taskId: string,todolistId: string) => {
+export const deleteTaskTC = (taskId: string, todolistId: string) => {
 
     return (dispatch: Dispatch) => {
         todolistsAPI.deleteTask(todolistId, taskId).then(res => {
@@ -218,5 +203,20 @@ export const deleteTaskTC = ( taskId: string,todolistId: string) => {
             // dispatchToTasksReducer(action)
             dispatch(action)
         })
+    }
+}
+
+
+export const addTaskTC = (taskTitle: string, todolistId: string) => {
+
+    return (dispatch: Dispatch) => {
+        todolistsAPI.createTask(todolistId, taskTitle).then(res => {
+                //dispatch action
+                //получили ответ с сервера сразу созданны объект новой таски{}
+                const task = res.data.data.item
+                const action = addTaskAC(task)
+                dispatch(action)
+            }
+        )
     }
 }

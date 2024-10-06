@@ -4,8 +4,7 @@ const settings = {
     withCredentials: true,
     headers: {
         'API-KEY': '10c1fdd7-9082-42b9-8b8e-a91a39268620',
-        // 'API-KEY': '8f2534e2-22a4-4052-894e-a66c04807482',
-        // 'Authorization':'faf31b22-1a31-4523-aa57-3e2d242b3f53',
+        
 
         'Authorization': 'Bearer f41d8518-3586-4e78-b489-4fdf0d73663d'
     }
@@ -96,7 +95,7 @@ export const todolistsAPI = {
         return instance.get<GetTasksResponse>(`todo-lists/${todolistId}/tasks`)
     },
     createTask(todolistId: string, taskTitle: string) {
-        const promise = instance.post<ResponseType<TaskType>>(`todo-lists/${todolistId}/tasks`, {title: taskTitle})
+        const promise = instance.post<ResponseType<{item:TaskType}>>(`todo-lists/${todolistId}/tasks`, {title: taskTitle})
         return promise
     },
     deleteTask(todolistId: string, taskId: string) {
