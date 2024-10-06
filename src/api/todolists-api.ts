@@ -3,9 +3,14 @@ import axios from "axios";
 const settings = {
     withCredentials: true,
     headers: {
-        'API-KEY': '66253064-f6b3-4f49-8240-cddabe300831'
+        'API-KEY': '10c1fdd7-9082-42b9-8b8e-a91a39268620',
+        // 'API-KEY': '8f2534e2-22a4-4052-894e-a66c04807482',
+        // 'Authorization':'faf31b22-1a31-4523-aa57-3e2d242b3f53',
+
+        'Authorization': 'Bearer f41d8518-3586-4e78-b489-4fdf0d73663d'
     }
 }
+
 
 const instance = axios.create({
     baseURL: "https://social-network.samuraijs.com/api/1.1/",

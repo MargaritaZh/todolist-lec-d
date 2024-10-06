@@ -193,19 +193,30 @@ export const changeTaskTitleAC = (taskId: string, newTaskTitle: string, todolist
 
 /////////////////
 
-export const SetTasksAC = (tasks: Array<TaskType>,todolistId: string ): SetTasksActionType => {
-    return {type: "SET-TASKS",  tasks:tasks, todolistId: todolistId,}
+export const SetTasksAC = (tasks: Array<TaskType>, todolistId: string): SetTasksActionType => {
+    return {type: "SET-TASKS", tasks: tasks, todolistId: todolistId,}
 }
 
 
-// Создадим функцию, САНКУ-задача сделать асинх. работу, запросить данные и передать в Redux
+// Создадим функцию, САНКУ-задача сделать асинх. работу, запросить данные и ответ заdispatch в Redux,изменим state
 
-export const fetchTasksTC = (todolistId:string) => {
+export const fetchTasksTC = (todolistId: string) => {
 
     return (dispatch: Dispatch) => {
         todolistsAPI.getTasks(todolistId)
             .then((res) => {
-                dispatch(SetTasksAC(res.data.items,todolistId))
+                dispatch(SetTasksAC(res.data.items, todolistId))
             })
+    }
+}
+
+export const deleteTaskTC = ( taskId: string,todolistId: string) => {
+
+    return (dispatch: Dispatch) => {
+        todolistsAPI.deleteTask(todolistId, taskId).then(res => {
+            const action = removeTaskAC(taskId, todolistId)
+            // dispatchToTasksReducer(action)
+            dispatch(action)
+        })
     }
 }
