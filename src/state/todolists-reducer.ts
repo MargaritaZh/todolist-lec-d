@@ -145,3 +145,14 @@ export const addTodolistTC = (title: string) => {
     }
 }
 
+
+export const changeTodolistTitleTC = (id: string, newTitle: string) => {
+
+    return (dispatch: Dispatch) => {
+        todolistsAPI.updateTodolistTitle(id, newTitle).then(res => {
+            //сначала обновим на сервере тодолист, а когда придет ответ тогда обновим и в BLL и т.д.
+            const action = changeTodolistTitleAC(id, newTitle)
+            dispatch(action)
+        })
+    }
+}

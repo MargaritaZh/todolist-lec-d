@@ -7,7 +7,7 @@ import {Menu} from "@mui/icons-material";
 import {
     addTodolistAC, addTodolistTC,
     changeTodolistFilterAC,
-    changeTodolistTitleAC, fetchTodolistsTC, FilterValuesType,
+    changeTodolistTitleAC, changeTodolistTitleTC, fetchTodolistsTC, FilterValuesType,
     removeTodolistTC, TodolistDomainType,
 } from "./state/todolists-reducer";
 import {
@@ -117,17 +117,15 @@ function AppWithRedux() {
 
 
     const changeTodolistTitle = useCallback(function (id: string, newTitle: string) {
-        const action = changeTodolistTitleAC(id, newTitle)
-        // dispatchToTodolistsReducer(action)
-        dispatch(action)
+        const thunk = changeTodolistTitleTC(id, newTitle)
+        // @ts-ignore
+        dispatch(thunk)
     }, [dispatch])
 
     const addTodolist = useCallback((title: string) => {
-
-        const thunk=addTodolistTC(title)
+        const thunk = addTodolistTC(title)
         // @ts-ignore
         dispatch(thunk)
-
     }, [dispatch])
 
 
