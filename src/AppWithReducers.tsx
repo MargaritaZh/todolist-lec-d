@@ -127,13 +127,13 @@ function AppWithReducers() {
 
 
     function changeStatus(taskId: string, status: TaskStatuses, todolistId: string) {
-        const action = updateTaskAC(taskId, status, todolistId)
+        const action = updateTaskAC(taskId, {status:status}, todolistId)
         dispatchToTasksReducer(action)
     }
 
 
     function changeTaskTitle(taskId: string, newTitle: string, todolistId: string) {
-        const action = changeTaskTitleAC(taskId, newTitle, todolistId)
+        const action = updateTaskAC(taskId, {title:newTitle}, todolistId)
         dispatchToTasksReducer(action)
     }
 

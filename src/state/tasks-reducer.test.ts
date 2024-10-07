@@ -178,13 +178,13 @@ test("correct task should be added to correct array", () => {
         todoListId: "todolistId2",
         title: "juce",
         status: TaskStatuses.New,
-        addedDate:"",
-        deadline:"",
-        description:"",
-        order:0,
-        priority:0,
-        startDate:"",
-        id:"id exsists",
+        addedDate: "",
+        deadline: "",
+        description: "",
+        order: 0,
+        priority: 0,
+        startDate: "",
+        id: "id exsists",
     })
     const endState = tasksReducer(startState, action)
 
@@ -277,7 +277,7 @@ test("status of cpecified task should be changed", () => {
         ],
     }
 //дйствия
-    const action = updateTaskAC("2", TaskStatuses.New, "todolistId2")
+    const action = updateTaskAC("2", {status:TaskStatuses.New}, "todolistId2")
     const endState = tasksReducer(startState, action)
 
 //проверяем соответствие
@@ -370,7 +370,7 @@ test("title of cpecified task should be changed", () => {
         ],
     }
 //дйствия
-    const action = changeTaskTitleAC("2", "Milkyway", "todolistId2")
+    const action = updateTaskAC("2", {title:"Milkyway"}, "todolistId2")
     const endState = tasksReducer(startState, action)
 
 //проверяем соответствие
@@ -460,7 +460,12 @@ test("new property with new array shoild be added when new todolist is added", (
         ],
     }
 //дйствия
-    const action = addTodolistAC("new todolist")
+    const action = addTodolistAC({
+        id: "kj11jh",
+        title: "new todolist",
+        order:0,
+        addedDate:"",
+    })
     const endState = tasksReducer(startState, action)
 
 //проверяем соответствие
