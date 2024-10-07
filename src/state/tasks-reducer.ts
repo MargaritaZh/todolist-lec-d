@@ -1,8 +1,9 @@
 import {TaskStateType} from "../App";
 import {v1} from "uuid";
 import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType} from "./todolists-reducer";
-import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI} from "../api/todolists-api";
+import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType} from "../api/todolists-api";
 import {Dispatch} from "redux";
+import {AppRootStateType} from "./store";
 
 
 export type RemoveTaskActionType = {
@@ -220,3 +221,35 @@ export const addTaskTC = (taskTitle: string, todolistId: string) => {
         )
     }
 }
+
+export const changeTaskStatusTC = (taskId: string, status: TaskStatuses, todolistId: string) => {
+
+    return (dispatch: Dispatch, getState: () => AppRootStateType) => {
+//сначало обновим на сервере
+        //1 при помощи функции getState мы находим наш state
+        const state = getState()
+//находим нужную таску
+        const task = state.tasks[todolistId].find(t => t.id === taskId)
+//если ее нет сообщение ошибки
+        if (!task) {
+            console.warn("task not found in the state")
+            return
+        }
+//ЧТОБЫ НЕ ПЕРЕЗАТЕРЕТЬ ДАННЫЕ В model, возьмем для объекта model из найденной таски .КРОМЕ STATUS-ЕГО НУЖНО ОБНОВИТЬ
+        const model: UpdateTaskModelType = {
+            status: status,
+            title: task.title,
+            deadline: task.deadline,
+            description: task.description,
+            priority: task.priority,
+            startDate: task.startDate
+        }
+
+        todolistsAPI.updateTask(todolistId, taskId, model).then(res => {
+
+           //когда пришел твет с сервера, то уже обновляем в BLL и т.д.
+            dispatch(changeStatusAC(taskId, status, todolistId))
+        })
+    }
+}
+

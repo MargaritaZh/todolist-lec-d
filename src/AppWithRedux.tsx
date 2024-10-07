@@ -13,7 +13,7 @@ import {
 import {
 
     addTaskTC,
-    changeStatusAC,
+    changeStatusAC, changeTaskStatusTC,
     changeTaskTitleAC,
     deleteTaskTC,
 
@@ -92,9 +92,9 @@ function AppWithRedux() {
 
 
     const changeStatus = useCallback(function (taskId: string, status: TaskStatuses, todolistId: string) {
-        const action = changeStatusAC(taskId, status, todolistId)
-        // dispatchToTasksReducer(action)
-        dispatch(action)
+        const thunk = changeTaskStatusTC(taskId, status, todolistId)
+        // @ts-ignore
+        dispatch(thunk)
     }, [dispatch])
 
     const changeTaskTitle = useCallback(function (taskId: string, newTitle: string, todolistId: string) {
