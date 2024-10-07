@@ -1,5 +1,5 @@
 import {TaskStateType} from "../App";
-import {v1} from "uuid";
+
 import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType} from "./todolists-reducer";
 import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType} from "../api/todolists-api";
 import {Dispatch} from "redux";
@@ -16,10 +16,10 @@ export type AddTaskActionType = {
     task: TaskType
 
 }
-export type ChangeTaskStatusActionType = {
-    type: "CHANGE-TASK-STATUS"
+export type UpdateTaskActionType = {
+    type: "UPDATE-TASK"
     taskId: string
-    status: TaskStatuses
+    model: UpdateDomainTaskModelType
     todolistId: string
 }
 
@@ -38,10 +38,11 @@ export type SetTasksActionType = {
 }
 
 
+
 type ActionsType =
     RemoveTaskActionType
     | AddTaskActionType
-    | ChangeTaskStatusActionType
+    | UpdateTaskActionType
     | ChangeTaskTitleActionType
     | AddTodolistActionType | RemoveTodolistActionType | SetTodolistsActionType | SetTasksActionType
 
@@ -81,42 +82,19 @@ export const tasksReducer = (state: TaskStateType = initialState, action: Action
             stateCopy[newTask.todoListId] = newTasks
             return stateCopy
         }
-        case "CHANGE-TASK-STATUS": {
-            //из App  //достаем массив тасок из конкретного тодолиста из объекта объектов
-            //         let tasks = tasksObj[todolistId]
-            //
-            //         let task = tasks.find(t => t.id === taskId
-            //         )
-            //         if (task) {
-            //             task.isDone = isDone
-            //             //одна таска изменилась в массиве
-            //             setTasksObj({...tasksObj})
-            //         }
+        case "UPDATE-TASK": {
 
-
-            //я написала
             return {
                 ...state,
                 [action.todolistId]: state[action.todolistId].map(el => el.id === action.taskId ? {
                     ...el,
-                    status: action.status
+                    ...action.model
                 } : el)
             }
         }
         case "CHANGE-TASK-TITLE": {
 
-            //из App
-            // let tasks = tasksObj[todolistId]
-            // let task = tasks.find(t => t.id === taskId
-            // )
-            // if (task) {
-            //     task.title = newTitle
-            //     //одна таска изменилась в массиве
-            //     setTasksObj({...tasksObj})
-            // }
 
-
-//я написала
             return {
                 ...state,
                 [action.todolistId]: state[action.todolistId].map(el => el.id === action.taskId ? {
@@ -167,9 +145,9 @@ export const addTaskAC = (task: TaskType): AddTaskActionType => {
     return {type: "ADD-TASK", task: task}
 }
 
-export const changeStatusAC = (taskId: string, status: TaskStatuses, todolistId: string): ChangeTaskStatusActionType => {
+export const updateTaskAC = (taskId: string, model: UpdateDomainTaskModelType, todolistId: string): UpdateTaskActionType => {
 
-    return {type: "CHANGE-TASK-STATUS", taskId: taskId, status: status, todolistId: todolistId}
+    return {type: "UPDATE-TASK", taskId: taskId, model, todolistId: todolistId}
 }
 
 export const changeTaskTitleAC = (taskId: string, newTaskTitle: string, todolistId: string): ChangeTaskTitleActionType => {
@@ -222,7 +200,17 @@ export const addTaskTC = (taskTitle: string, todolistId: string) => {
     }
 }
 
-export const changeTaskStatusTC = (taskId: string, status: TaskStatuses, todolistId: string) => {
+export type UpdateDomainTaskModelType = {
+    title?: string
+    description?: string
+    status?: TaskStatuses
+    priority?: TaskPriorities
+    startDate?: string
+    deadline?: string
+}
+
+
+export const updateTaskTC = (taskId: string,domainModel: UpdateDomainTaskModelType, todolistId: string) => {
 
     return (dispatch: Dispatch, getState: () => AppRootStateType) => {
 //сначало обновим на сервере
@@ -236,19 +224,20 @@ export const changeTaskStatusTC = (taskId: string, status: TaskStatuses, todolis
             return
         }
 //ЧТОБЫ НЕ ПЕРЕЗАТЕРЕТЬ ДАННЫЕ В model, возьмем для объекта model из найденной таски .КРОМЕ STATUS-ЕГО НУЖНО ОБНОВИТЬ
-        const model: UpdateTaskModelType = {
-            status: status,
+        const apiModel: UpdateTaskModelType = {
+            status: task.status,
             title: task.title,
             deadline: task.deadline,
             description: task.description,
             priority: task.priority,
-            startDate: task.startDate
+            startDate: task.startDate,
+            ...domainModel
         }
 
-        todolistsAPI.updateTask(todolistId, taskId, model).then(res => {
+        todolistsAPI.updateTask(todolistId, taskId, apiModel).then(res => {
 
            //когда пришел твет с сервера, то уже обновляем в BLL и т.д.
-            dispatch(changeStatusAC(taskId, status, todolistId))
+            dispatch(updateTaskAC(taskId, domainModel, todolistId))
         })
     }
 }

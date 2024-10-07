@@ -66,6 +66,8 @@ export type UpdateTaskModelType = {
     deadline: string
 }
 
+
+
 type GetTasksResponse = {
     items: Array<TaskType>
     totalCount: number

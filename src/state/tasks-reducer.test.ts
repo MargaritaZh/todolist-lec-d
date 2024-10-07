@@ -1,5 +1,5 @@
 import {TaskStateType} from "../App";
-import {addTaskAC, changeStatusAC, changeTaskTitleAC, removeTaskAC, SetTasksAC, tasksReducer} from "./tasks-reducer";
+import {addTaskAC, updateTaskAC, changeTaskTitleAC, removeTaskAC, SetTasksAC, tasksReducer} from "./tasks-reducer";
 import {addTodolistAC, removeTodolistAC, setTodolistsAC} from "./todolists-reducer";
 import {TaskPriorities, TaskStatuses} from "../api/todolists-api";
 
@@ -277,7 +277,7 @@ test("status of cpecified task should be changed", () => {
         ],
     }
 //дйствия
-    const action = changeStatusAC("2", TaskStatuses.New, "todolistId2")
+    const action = updateTaskAC("2", TaskStatuses.New, "todolistId2")
     const endState = tasksReducer(startState, action)
 
 //проверяем соответствие

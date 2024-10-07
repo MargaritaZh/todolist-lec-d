@@ -5,17 +5,16 @@ import {AddItemForm} from "./AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@mui/material";
 import {Menu} from "@mui/icons-material";
 import {
-    addTodolistAC, addTodolistTC,
+     addTodolistTC,
     changeTodolistFilterAC,
-    changeTodolistTitleAC, changeTodolistTitleTC, fetchTodolistsTC, FilterValuesType,
+     changeTodolistTitleTC, fetchTodolistsTC, FilterValuesType,
     removeTodolistTC, TodolistDomainType,
 } from "./state/todolists-reducer";
 import {
 
     addTaskTC,
-    changeStatusAC, changeTaskStatusTC,
-    changeTaskTitleAC,
-    deleteTaskTC,
+
+    deleteTaskTC, updateTaskTC,
 
 } from "./state/tasks-reducer";
 import {useDispatch, useSelector} from "react-redux";
@@ -92,15 +91,15 @@ function AppWithRedux() {
 
 
     const changeStatus = useCallback(function (taskId: string, status: TaskStatuses, todolistId: string) {
-        const thunk = changeTaskStatusTC(taskId, status, todolistId)
+        const thunk = updateTaskTC(taskId, {status:status}, todolistId)
         // @ts-ignore
         dispatch(thunk)
     }, [dispatch])
 
     const changeTaskTitle = useCallback(function (taskId: string, newTitle: string, todolistId: string) {
-        const action = changeTaskTitleAC(taskId, newTitle, todolistId)
-        // dispatchToTasksReducer(action)
-        dispatch(action)
+        const thunk = updateTaskTC(taskId, {title:newTitle}, todolistId)
+        // @ts-ignore
+        dispatch(thunk)
     }, [dispatch])
 
     const changeFilter = useCallback(function (value: FilterValuesType, todolistId: string) {
