@@ -12,7 +12,7 @@ import {
     removeTodolistAC,
     todolistsReducer
 } from "./state/todolists-reducer";
-import {addTaskAC, updateTaskAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from "./state/tasks-reducer";
+import {addTaskAC, updateTaskAC, removeTaskAC, tasksReducer} from "./state/tasks-reducer";
 import {TaskPriorities, TaskStatuses, TaskType} from "./api/todolists-api";
 
 
