@@ -6,46 +6,16 @@ import {Dispatch} from "redux";
 import {AppRootStateType} from "../middleware/store";
 
 
-export type RemoveTaskActionType = {
-    type: "REMOVE-TASK"
-    todolistId: string
-    taskId: string
-}
-export type AddTaskActionType = {
-    type: "ADD-TASK"
-    task: TaskType
-
-}
-export type UpdateTaskActionType = {
-    type: "UPDATE-TASK"
-    taskId: string
-    model: UpdateDomainTaskModelType
-    todolistId: string
-}
-
-export type ChangeTaskTitleActionType = {
-    type: "CHANGE-TASK-TITLE"
-    taskId: string
-    newTaskTitle: string
-    todolistId: string
-}
-
-export type SetTasksActionType = {
-    type: "SET-TASKS"
-    tasks: Array<TaskType>
-    todolistId: string
-
-}
-
-
-
 type ActionsType =
-    RemoveTaskActionType
-    | AddTaskActionType
-    | UpdateTaskActionType
-    | ChangeTaskTitleActionType
-    | AddTodolistActionType | RemoveTodolistActionType | SetTodolistsActionType | SetTasksActionType
 
+    |ReturnType<typeof removeTaskAC>
+    |ReturnType<typeof addTaskAC>
+    |ReturnType<typeof updateTaskAC>
+    |ReturnType<typeof changeTaskTitleAC>
+    |ReturnType<typeof SetTasksAC>
+    | AddTodolistActionType
+    | RemoveTodolistActionType
+    | SetTodolistsActionType
 
 const initialState: TaskStateType = {}
 
@@ -53,13 +23,6 @@ const initialState: TaskStateType = {}
 export const tasksReducer = (state: TaskStateType = initialState, action: ActionsType): TaskStateType => {
     switch (action.type) {
         case "REMOVE-TASK": {
-            //из APP
-            // let tasks = tasksObj[todolistId]
-            // let filteredTasks = tasks.filter(t => t.id !== id)
-            // tasksObj[todolistId] = filteredTasks
-            // setTasksObj({...tasksObj})
-
-            //написала я
             return {
                 ...state,
                 [action.todolistId]: state[action.todolistId].filter(t => t.id !== action.taskId)
@@ -83,7 +46,6 @@ export const tasksReducer = (state: TaskStateType = initialState, action: Action
             return stateCopy
         }
         case "UPDATE-TASK": {
-
             return {
                 ...state,
                 [action.todolistId]: state[action.todolistId].map(el => el.id === action.taskId ? {
@@ -93,8 +55,6 @@ export const tasksReducer = (state: TaskStateType = initialState, action: Action
             }
         }
         case "CHANGE-TASK-TITLE": {
-
-
             return {
                 ...state,
                 [action.todolistId]: state[action.todolistId].map(el => el.id === action.taskId ? {
@@ -114,7 +74,6 @@ export const tasksReducer = (state: TaskStateType = initialState, action: Action
             delete stateCopy[action.id]
             return stateCopy
         }
-
         //////////////////
         case "SET-TODOLISTS": {
             const copyState = {...state}
@@ -131,36 +90,21 @@ export const tasksReducer = (state: TaskStateType = initialState, action: Action
             return copyState
         }
 
-
         default:
             return state
     }
 }
 
-export const removeTaskAC = (taskId: string, todolistId: string): RemoveTaskActionType => {
-    return {type: "REMOVE-TASK", todolistId: todolistId, taskId: taskId}
-}
+export const removeTaskAC = (taskId: string, todolistId: string) => ({type: "REMOVE-TASK", todolistId, taskId}) as const
 
-export const addTaskAC = (task: TaskType): AddTaskActionType => {
-    return {type: "ADD-TASK", task: task}
-}
+export const addTaskAC = (task: TaskType) => ({type: "ADD-TASK", task: task}) as const
 
-export const updateTaskAC = (taskId: string, model: UpdateDomainTaskModelType, todolistId: string): UpdateTaskActionType => {
+export const updateTaskAC = (taskId: string, model: UpdateDomainTaskModelType, todolistId: string) => ({type: "UPDATE-TASK", taskId, model, todolistId}) as const
 
-    return {type: "UPDATE-TASK", taskId: taskId, model, todolistId: todolistId}
-}
-
-export const changeTaskTitleAC = (taskId: string, newTaskTitle: string, todolistId: string): ChangeTaskTitleActionType => {
-
-    return {type: "CHANGE-TASK-TITLE", taskId: taskId, newTaskTitle: newTaskTitle, todolistId: todolistId}
-}
+export const changeTaskTitleAC = (taskId: string, newTaskTitle: string, todolistId: string) => ({type: "CHANGE-TASK-TITLE", taskId: taskId, newTaskTitle: newTaskTitle, todolistId: todolistId}) as const
 
 /////////////////
-
-export const SetTasksAC = (tasks: Array<TaskType>, todolistId: string): SetTasksActionType => {
-    return {type: "SET-TASKS", tasks: tasks, todolistId: todolistId,}
-}
-
+export const SetTasksAC = (tasks: Array<TaskType>, todolistId: string) => ({type: "SET-TASKS", tasks, todolistId}) as const
 
 // Создадим функцию, САНКУ-задача сделать асинх. работу, запросить данные и ответ заdispatch в Redux,изменим state
 

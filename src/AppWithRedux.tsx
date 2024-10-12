@@ -96,6 +96,8 @@ function AppWithRedux() {
         const thunk = updateTaskTC(taskId, {title:newTitle}, todolistId)
         dispatch(thunk)
     }, [dispatch])
+///////////////////////
+
 
     const changeFilter = useCallback(function (value: FilterValuesType, todolistId: string) {
         const action = changeTodolistFilterAC(todolistId, value)
