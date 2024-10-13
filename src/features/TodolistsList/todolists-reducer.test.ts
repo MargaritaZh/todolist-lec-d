@@ -5,7 +5,7 @@ import {
     removeTodolistAC, setTodolistsAC, TodolistDomainType,
     todolistsReducer
 } from "./todolists-reducer"
-import {TodolistType} from "../api/todolists-api";
+import {TodolistType} from "../../api/todolists-api";
 
 
 test("correct todolist should be removed", () => {

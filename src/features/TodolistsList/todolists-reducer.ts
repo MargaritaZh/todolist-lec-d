@@ -1,4 +1,4 @@
-import {todolistsAPI, TodolistType} from "../api/todolists-api";
+import {todolistsAPI, TodolistType} from "../../api/todolists-api";
 import {Dispatch} from "redux";
 
 
@@ -46,7 +46,7 @@ export const setTodolistsAC = (todolists: Array<TodolistType>) => ({type: "SET-T
 
 // Создадим функцию, САНКУ-задача сделать асинх. работу, запросить данные и передать в Redux
 
-export const fetchTodolistsTC = () => (dispatch: Dispatch) => {
+export const fetchTodolistsTC = () => (dispatch: Dispatch<ActionsType>) => {
     todolistsAPI.getTodolists()
         .then((res) => {
             dispatch(setTodolistsAC(res.data))
@@ -54,7 +54,7 @@ export const fetchTodolistsTC = () => (dispatch: Dispatch) => {
 }
 
 
-export const removeTodolistTC = (todolistId: string) => (dispatch: Dispatch) => {
+export const removeTodolistTC = (todolistId: string) => (dispatch: Dispatch<ActionsType>) => {
     todolistsAPI.deleteTodolist(todolistId).then(res => {
         //сначала удалим тодолист на серере, и когда пришел ответ что удалился ,то и удалим из BLL
         dispatch(removeTodolistAC(todolistId))
@@ -62,7 +62,7 @@ export const removeTodolistTC = (todolistId: string) => (dispatch: Dispatch) => 
 }
 
 
-export const addTodolistTC = (title: string) => (dispatch: Dispatch) => {
+export const addTodolistTC = (title: string) => (dispatch: Dispatch<ActionsType>) => {
     todolistsAPI.createTodolist(title).then(res => {
         //сначала создадим на сервере нов тодолист, а когда придет ответ в BLL и т.д.
         const newTodo = res.data.data.item
@@ -72,7 +72,7 @@ export const addTodolistTC = (title: string) => (dispatch: Dispatch) => {
 }
 
 
-export const changeTodolistTitleTC = (id: string, newTitle: string) => (dispatch: Dispatch) => {
+export const changeTodolistTitleTC = (id: string, newTitle: string) => (dispatch: Dispatch<ActionsType>) => {
     todolistsAPI.updateTodolistTitle(id, newTitle).then(res => {
         //сначала обновим на сервере тодолист, а когда придет ответ тогда обновим и в BLL и т.д.
         const action = changeTodolistTitleAC(id, newTitle)

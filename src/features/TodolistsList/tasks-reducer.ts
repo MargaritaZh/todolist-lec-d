@@ -1,12 +1,13 @@
-import {TaskStateType} from "../App";
 
 import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType} from "./todolists-reducer";
-import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType} from "../api/todolists-api";
+import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType} from "../../api/todolists-api";
 import {Dispatch} from "redux";
-import {AppRootStateType} from "../middleware/store";
+import {AppRootStateType} from "../../middleware/store";
 
 
-
+ export type TaskStateType = {
+    [key: string]: Array<TaskType>
+}
 
 const initialState: TaskStateType = {}
 
@@ -77,7 +78,7 @@ export const SetTasksAC = (tasks: Array<TaskType>, todolistId: string) => ({type
 
 export const fetchTasksTC = (todolistId: string) => {
 
-    return (dispatch: Dispatch) => {
+    return (dispatch: Dispatch<ActionsType>) => {
         todolistsAPI.getTasks(todolistId)
             .then((res) => {
                 dispatch(SetTasksAC(res.data.items, todolistId))
@@ -85,7 +86,7 @@ export const fetchTasksTC = (todolistId: string) => {
     }
 }
 
-export const deleteTaskTC = (taskId: string, todolistId: string) => (dispatch: Dispatch) => {
+export const deleteTaskTC = (taskId: string, todolistId: string) => (dispatch: Dispatch<ActionsType>) => {
         todolistsAPI.deleteTask(todolistId, taskId).then(res => {
             const action = removeTaskAC(taskId, todolistId)
             // dispatchToTasksReducer(action)
@@ -93,7 +94,7 @@ export const deleteTaskTC = (taskId: string, todolistId: string) => (dispatch: D
         })
     }
 
-export const addTaskTC = (taskTitle: string, todolistId: string) => (dispatch: Dispatch) => {
+export const addTaskTC = (taskTitle: string, todolistId: string) => (dispatch: Dispatch<ActionsType>) => {
         todolistsAPI.createTask(todolistId, taskTitle).then(res => {
                 //dispatch action
                 //получили ответ с сервера сразу созданны объект новой таски{}
@@ -116,7 +117,7 @@ export type UpdateDomainTaskModelType = {
 
 
 export const updateTaskTC = (taskId: string,domainModel: UpdateDomainTaskModelType, todolistId: string) =>
-    (dispatch: Dispatch, getState: () => AppRootStateType) => {
+    (dispatch: Dispatch<ActionsType>, getState: () => AppRootStateType) => {
 //сначало обновим на сервере
         //1 при помощи функции getState мы находим наш state
         const state = getState()
