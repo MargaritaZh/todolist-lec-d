@@ -1,16 +1,18 @@
 import React from 'react';
 import './App.css';
 
-import {AppBar, Button, Container, IconButton, Toolbar, Typography} from "@mui/material";
+import {AppBar, Button, Container, IconButton, LinearProgress, Toolbar, Typography} from "@mui/material";
 import {Menu} from "@mui/icons-material";
 
 import {TodolistsList} from "../features/TodolistsList/TodolistsList";
+import {ErrorSnackbars} from "../components/ErrorSnackBar/ErrorSnackBar";
 
 
 function AppWithRedux() {
 
     return (
         <div className="App">
+            <ErrorSnackbars/>
             <AppBar position="static">
                 <Toolbar>
                     <IconButton
@@ -27,11 +29,12 @@ function AppWithRedux() {
                     </Typography>
                     <Button color="inherit">Login</Button>
                 </Toolbar>
+
+                {/*<LinearProgress/>*/}
+
             </AppBar>
             <Container fixed>
-
                 <TodolistsList/>
-
             </Container>
 
         </div>

@@ -3,8 +3,8 @@ import axios from "axios";
 const settings = {
     withCredentials: true,
     headers: {
-        'API-KEY': '10c1fdd7-9082-42b9-8b8e-a91a39268620',
-        'Authorization': 'Bearer f41d8518-3586-4e78-b489-4fdf0d73663d'
+        'API-KEY': '251eb60b-136c-4989-9d33-ab9255802b03',
+        'Authorization': 'Bearer 90b1ae4e-6edf-4bb0-8a5e-fca4c440b804'
     }
 }
 

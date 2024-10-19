@@ -78,6 +78,10 @@ const initialGlobalState: AppRootStateType = {
                 description: ""
             }
         ]
+    },
+    app:{
+      error:null,
+        status:"idle"
     }
 };
 
