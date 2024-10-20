@@ -15,7 +15,12 @@ import {Grid, Paper} from "@mui/material";
 import {AddItemForm} from "../../components/AddItemForm/AddItemForm";
 import {Todolist} from "./Todolist/Todolist";
 
-export const TodolistsList: React.FC = () => {
+type PropsType = {
+    demo?: boolean
+}
+
+
+export const TodolistsList: React.FC<PropsType> = ({demo = false, ...props}) => {
 
     const todolists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todolist)
 
@@ -25,6 +30,9 @@ export const TodolistsList: React.FC = () => {
 
 
     useEffect(() => {
+        if (demo) {
+            return
+        }
         dispatch(fetchTodolistsTC())
     }, [])
 
@@ -89,18 +97,18 @@ export const TodolistsList: React.FC = () => {
 
                         return (<Grid item>
                                 <Paper style={{padding: "10px"}}>
-                                    <Todolist key={todolist.id}
-                                              id={todolist.id}
-                                              title={todolist.title}
-                                              tasks={tasksForTodolist}
-                                              removeTask={removeTask}
-                                              changeFilter={changeFilter}
-                                              addTask={addTask}
-                                              changeTaskStatus={changeStatus}
-                                              changeTaskTitle={changeTaskTitle}
-                                              filter={todolist.filter}
-                                              removeTodolist={removeTodolist}
-                                              changeTodolistTitle={changeTodolistTitle}
+                                    <Todolist
+                                        key={todolist.id}
+                                        todolist={todolist}
+                                        tasks={tasksForTodolist}
+                                        removeTask={removeTask}
+                                        changeFilter={changeFilter}
+                                        addTask={addTask}
+                                        changeTaskStatus={changeStatus}
+                                        changeTaskTitle={changeTaskTitle}
+                                        removeTodolist={removeTodolist}
+                                        changeTodolistTitle={changeTodolistTitle}
+                                        demo={demo}
                                     />
                                 </Paper>
                             </Grid>

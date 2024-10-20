@@ -10,8 +10,12 @@ import {AppRootStateType} from "../middleware/store";
 import {RequestStatusType} from "./app-reducer";
 import {useSelector} from "react-redux";
 
+type PropsType = {
+    demo?: boolean
+}
 
-function AppWithRedux() {
+
+function AppWithRedux({demo=false, ...props}: PropsType) {
     const status = useSelector<AppRootStateType, RequestStatusType>((state) => state.app.status)
 
     return (
@@ -39,7 +43,7 @@ function AppWithRedux() {
 
             </AppBar>
             <Container fixed>
-                <TodolistsList/>
+                <TodolistsList demo={demo}/>
             </Container>
 
         </div>
