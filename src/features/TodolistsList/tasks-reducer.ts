@@ -2,7 +2,7 @@ import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType}
 import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType} from "../../api/todolists-api";
 import {Dispatch} from "redux";
 import {AppRootStateType} from "../../middleware/store";
-import {setAppErrorAC, setAppErrorActionType, setAppStatusAC, setAppStatusActionType} from "../../app/app-reducer";
+import {setAppErrorAC, SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType} from "../../app/app-reducer";
 
 
 export type TaskStateType = {
@@ -69,17 +69,23 @@ export const removeTaskAC = (taskId: string, todolistId: string) => ({type: "REM
 
 export const addTaskAC = (task: TaskType) => ({type: "ADD-TASK", task: task} as const)
 
-export const updateTaskAC = (taskId: string, model: UpdateDomainTaskModelType, todolistId: string) => ({type: "UPDATE-TASK", taskId, model, todolistId} as const)
+export const updateTaskAC = (taskId: string, model: UpdateDomainTaskModelType, todolistId: string) => ({
+    type: "UPDATE-TASK",
+    taskId,
+    model,
+    todolistId
+} as const)
 
 /////////////////
 export const SetTasksAC = (tasks: Array<TaskType>, todolistId: string) => ({
-    type: "SET-TASKS", tasks, todolistId} as const)
+    type: "SET-TASKS", tasks, todolistId
+} as const)
 
 //thunks
 
 // Создадим функцию, САНКУ-задача сделать асинх. работу, запросить данные и ответ заdispatch в Redux,изменим state
 
-export const fetchTasksTC = (todolistId: string) => (dispatch: Dispatch<ActionsType | setAppStatusActionType>) => {
+export const fetchTasksTC = (todolistId: string) => (dispatch: Dispatch<ActionsType | SetAppStatusActionType>) => {
     //перед запросом крутилку покажи:
     dispatch(setAppStatusAC("loading"))
 
@@ -99,10 +105,11 @@ export const deleteTaskTC = (taskId: string, todolistId: string) => (dispatch: D
     })
 }
 
-export const addTaskTC = (taskTitle: string, todolistId: string) => (dispatch: Dispatch<ActionsType | setAppErrorActionType | setAppStatusActionType>) => {
+export const addTaskTC = (taskTitle: string, todolistId: string) => (dispatch: Dispatch<ActionsType | SetAppErrorActionType | SetAppStatusActionType>) => {
     //крутилку покажи
     dispatch(setAppStatusAC("loading"))
-    todolistsAPI.createTask(todolistId, taskTitle).then(res => {
+    todolistsAPI.createTask(todolistId, taskTitle)
+        .then(res => {
             if (res.data.resultCode === 0) {
                 //dispatch action
                 //получили ответ с сервера сразу созданный объект новой таски{}
@@ -121,6 +128,10 @@ export const addTaskTC = (taskTitle: string, todolistId: string) => (dispatch: D
                 dispatch(setAppStatusAC("failed"))
             }
         })
+        .catch((error) => {
+            dispatch(setAppErrorAC(error.message))
+            dispatch(setAppStatusAC("failed"))
+        })
 }
 
 
@@ -135,7 +146,7 @@ export type UpdateDomainTaskModelType = {
 
 
 export const updateTaskTC = (taskId: string, domainModel: UpdateDomainTaskModelType, todolistId: string) =>
-    (dispatch: Dispatch<ActionsType>, getState: () => AppRootStateType) => {
+    (dispatch: ThunkDispatchType, getState: () => AppRootStateType) => {
 //сначало обновим на сервере
         //1 при помощи функции getState мы находим наш state
         const state = getState()
@@ -157,11 +168,25 @@ export const updateTaskTC = (taskId: string, domainModel: UpdateDomainTaskModelT
             ...domainModel
         }
 
-        todolistsAPI.updateTask(todolistId, taskId, apiModel).then(res => {
-
-            //когда пришел твет с сервера, то уже обновляем в BLL и т.д.
-            dispatch(updateTaskAC(taskId, domainModel, todolistId))
-        })
+        todolistsAPI.updateTask(todolistId, taskId, apiModel)
+            .then(res => {
+                if (res.data.resultCode === 0) {
+                    //когда пришел твет с сервера, то уже обновляем в BLL и т.д.
+                    dispatch(updateTaskAC(taskId, domainModel, todolistId))
+                } else {
+                    if (res.data.messages.length) {
+                        dispatch(setAppErrorAC(res.data.messages[0]))
+                    } else {
+                        dispatch(setAppErrorAC("some error occurred"))
+                    }
+                    //если ошибка то:
+                    dispatch(setAppStatusAC("failed"))
+                }
+            })
+            .catch((error) => {
+                dispatch(setAppErrorAC(error.message))
+                dispatch(setAppStatusAC("failed"))
+            })
     }
 
 //types
@@ -175,3 +200,5 @@ type ActionsType =
     | AddTodolistActionType
     | RemoveTodolistActionType
     | SetTodolistsActionType
+
+type  ThunkDispatchType = Dispatch<ActionsType | SetAppStatusActionType | SetAppErrorActionType>
