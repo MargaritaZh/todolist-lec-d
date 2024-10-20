@@ -28,6 +28,7 @@ function App() {
             filter: "all",
             addedDate:"",
             order:0,
+            entityStatus:"idle"
         },
         {
             id: todolistId2,
@@ -35,6 +36,7 @@ function App() {
             filter: "all",
             addedDate:"",
             order:0,
+            entityStatus:"idle"
         },
     ])
 
@@ -159,6 +161,7 @@ function App() {
             title: title,
             addedDate: "",
             order: 0,
+            entityStatus:"idle"
         }
 
         setTodolists([newTodolist, ...todolists])
@@ -211,15 +214,13 @@ function App() {
                         return (<Grid item>
                                 <Paper style={{padding: "10px"}}>
                                     <Todolist key={todolist.id}
-                                              id={todolist.id}
-                                              title={todolist.title}
+                                              todolist={todolist}
                                               tasks={tasksForTodolist}
                                               removeTask={removeTask}
                                               changeFilter={changeFilter}
                                               addTask={addTask}
                                               changeTaskStatus={changeStatus}
                                               changeTaskTitle={changeTaskTitle}
-                                              filter={todolist.filter}
                                               removeTodolist={removeTodolist} changeTodolistTitle={changeTodolistTitle}
                                     />
                                 </Paper>

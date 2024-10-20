@@ -65,23 +65,15 @@ export const tasksReducer = (state: TaskStateType = initialState, action: Action
 
 //actions
 
-export const removeTaskAC = (taskId: string, todolistId: string) => ({type: "REMOVE-TASK", todolistId, taskId}) as const
+export const removeTaskAC = (taskId: string, todolistId: string) => ({type: "REMOVE-TASK", todolistId, taskId} as const)
 
-export const addTaskAC = (task: TaskType) => ({type: "ADD-TASK", task: task}) as const
+export const addTaskAC = (task: TaskType) => ({type: "ADD-TASK", task: task} as const)
 
-export const updateTaskAC = (taskId: string, model: UpdateDomainTaskModelType, todolistId: string) => ({
-    type: "UPDATE-TASK",
-    taskId,
-    model,
-    todolistId
-}) as const
+export const updateTaskAC = (taskId: string, model: UpdateDomainTaskModelType, todolistId: string) => ({type: "UPDATE-TASK", taskId, model, todolistId} as const)
 
 /////////////////
 export const SetTasksAC = (tasks: Array<TaskType>, todolistId: string) => ({
-    type: "SET-TASKS",
-    tasks,
-    todolistId
-}) as const
+    type: "SET-TASKS", tasks, todolistId} as const)
 
 //thunks
 

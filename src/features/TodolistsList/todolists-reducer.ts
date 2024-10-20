@@ -30,25 +30,33 @@ export const todolistsReducer = (state: Array<TodolistDomainType> = initialState
             return state.map(tl => tl.id === action.id ? {...tl, title: action.title} : tl)
         case "CHANGE-TODOLIST-FIlTER":
             return state.map(tl => tl.id === action.id ? {...tl, filter: action.filter} : tl)
+        case "CHANGE-TODOLIST-ENTITY-STATUS":
+            return state.map(tl => tl.id === action.id ? {...tl, entityStatus: action.status} : tl)
         default:
             return state
     }
 }
 
-export const removeTodolistAC = (id: string) => ({type: "REMOVE-TODOLIST", id}) as const
+//action
+export const changeTodolistEntityStatusAC = (id: string, status: RequestStatusType) => ({
+    type: "CHANGE-TODOLIST-ENTITY-STATUS", id, status,
+} as const)
 
-export const addTodolistAC = (todolist: TodolistType) => ({type: "ADD-TODOLIST", todolist}) as const
+export const removeTodolistAC = (id: string) => ({type: "REMOVE-TODOLIST", id} as const)
+
+export const addTodolistAC = (todolist: TodolistType) => ({type: "ADD-TODOLIST", todolist} as const)
 
 export const changeTodolistTitleAC = (id: string, title: string) => ({
     type: "CHANGE-TODOLIST-TITLE", id, title
-}) as const
+} as const)
 
 export const changeTodolistFilterAC = (id: string, filter: FilterValuesType) => ({
     type: "CHANGE-TODOLIST-FIlTER", filter, id
-}) as const
+} as const)
 
 //Создадим AC. Reducer,у нас откудо-то взялись тодолисты,зафиксируй их в state
-export const setTodolistsAC = (todolists: Array<TodolistType>) => ({type: "SET-TODOLISTS", todolists}) as const
+export const setTodolistsAC = (todolists: Array<TodolistType>) => ({type: "SET-TODOLISTS", todolists} as const)
+
 
 // Создадим функцию, САНКУ-задача сделать асинх. работу, запросить данные и передать в Redux
 
@@ -107,5 +115,6 @@ type ActionsType =
     | ReturnType<typeof changeTodolistTitleAC>
     | ReturnType<typeof changeTodolistFilterAC>
     | SetTodolistsActionType
+    | ReturnType<typeof changeTodolistEntityStatusAC>
 
 type  ThunkDispatchType = Dispatch<ActionsType | setStatusActionType>
