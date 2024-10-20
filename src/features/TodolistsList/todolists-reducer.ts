@@ -1,5 +1,6 @@
 import {todolistsAPI, TodolistType} from "../../api/todolists-api";
 import {Dispatch} from "redux";
+import {setStatusAC, setStatusActionType} from "../../app/app-reducer";
 
 
 export type  FilterValuesType = "all" | "active" | "completed"
@@ -36,20 +37,27 @@ export const removeTodolistAC = (id: string) => ({type: "REMOVE-TODOLIST", id}) 
 export const addTodolistAC = (todolist: TodolistType) => ({type: "ADD-TODOLIST", todolist}) as const
 
 export const changeTodolistTitleAC = (id: string, title: string) => ({
-    type: "CHANGE-TODOLIST-TITLE", id, title}) as const
+    type: "CHANGE-TODOLIST-TITLE", id, title
+}) as const
 
 export const changeTodolistFilterAC = (id: string, filter: FilterValuesType) => ({
-    type: "CHANGE-TODOLIST-FIlTER", filter, id}) as const
+    type: "CHANGE-TODOLIST-FIlTER", filter, id
+}) as const
 
 //Создадим AC. Reducer,у нас откудо-то взялись тодолисты,зафиксируй их в state
 export const setTodolistsAC = (todolists: Array<TodolistType>) => ({type: "SET-TODOLISTS", todolists}) as const
 
 // Создадим функцию, САНКУ-задача сделать асинх. работу, запросить данные и передать в Redux
 
-export const fetchTodolistsTC = () => (dispatch: Dispatch<ActionsType>) => {
+export const fetchTodolistsTC = () => (dispatch: Dispatch<ActionsType | setStatusActionType>) => {
+    //перед запросом крутилку покажи:
+    dispatch(setStatusAC("loading"))
+
     todolistsAPI.getTodolists()
         .then((res) => {
             dispatch(setTodolistsAC(res.data))
+            //крутилку убираем:
+            dispatch(setStatusAC("succeeded"))
         })
 }
 
