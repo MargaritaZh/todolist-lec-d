@@ -6,9 +6,13 @@ import {Menu} from "@mui/icons-material";
 
 import {TodolistsList} from "../features/TodolistsList/TodolistsList";
 import {ErrorSnackbars} from "../components/ErrorSnackBar/ErrorSnackBar";
+import {AppRootStateType} from "../middleware/store";
+import {RequestStatusType} from "./app-reducer";
+import {useSelector} from "react-redux";
 
 
 function AppWithRedux() {
+    const status = useSelector<AppRootStateType, RequestStatusType>((state) => state.app.status)
 
     return (
         <div className="App">
@@ -30,7 +34,8 @@ function AppWithRedux() {
                     <Button color="inherit">Login</Button>
                 </Toolbar>
 
-                {/*<LinearProgress/>*/}
+                {status === "loading" && <LinearProgress/>}
+
 
             </AppBar>
             <Container fixed>
@@ -40,8 +45,6 @@ function AppWithRedux() {
         </div>
     );
 }
-
-
 
 
 export default AppWithRedux;

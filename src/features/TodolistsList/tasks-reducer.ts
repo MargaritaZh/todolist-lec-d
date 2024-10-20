@@ -2,7 +2,7 @@ import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType}
 import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType} from "../../api/todolists-api";
 import {Dispatch} from "redux";
 import {AppRootStateType} from "../../middleware/store";
-import {setErrorAC, setErrorActionType} from "../../app/app-reducer";
+import {setErrorAC, setErrorActionType, setStatusAC, setStatusActionType} from "../../app/app-reducer";
 
 
 export type TaskStateType = {
@@ -87,14 +87,16 @@ export const SetTasksAC = (tasks: Array<TaskType>, todolistId: string) => ({
 
 // Создадим функцию, САНКУ-задача сделать асинх. работу, запросить данные и ответ заdispatch в Redux,изменим state
 
-export const fetchTasksTC = (todolistId: string) => {
+export const fetchTasksTC = (todolistId: string) => (dispatch: Dispatch<ActionsType | setStatusActionType>) => {
+    //перед запросом крутилку покажи:
+    dispatch(setStatusAC("loading"))
 
-    return (dispatch: Dispatch<ActionsType>) => {
-        todolistsAPI.getTasks(todolistId)
-            .then((res) => {
-                dispatch(SetTasksAC(res.data.items, todolistId))
-            })
-    }
+    todolistsAPI.getTasks(todolistId)
+        .then((res) => {
+            dispatch(SetTasksAC(res.data.items, todolistId))
+            //крутилку убираем:
+            dispatch(setStatusAC("succeeded"))
+        })
 }
 
 export const deleteTaskTC = (taskId: string, todolistId: string) => (dispatch: Dispatch<ActionsType>) => {
