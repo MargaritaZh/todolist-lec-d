@@ -13,3 +13,8 @@ export const AddItemFormBaseExample=(props:any)=>{
 
     return <AddItemForm addItem={callback}/>
 }
+
+export const AddItemFormDisaibledExample=(props:any)=>{
+
+    return <AddItemForm disabled={true} addItem={callback}/>
+}

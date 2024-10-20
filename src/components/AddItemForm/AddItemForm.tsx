@@ -4,9 +4,10 @@ import {ControlPoint} from "@mui/icons-material";
 
 type AddItemFormPropsType = {
     addItem: (title: string) => void
+    disabled?: boolean
 }
 
-export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
+export const AddItemForm = React.memo(({disabled = false, ...props}: AddItemFormPropsType) => {
 
     console.log("AddItemForm is called")
 
@@ -46,15 +47,18 @@ export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
             {/*       onKeyPress={onKeyPressHandler}*/}
             {/*       className={error ? "error" : ""}*/}
             {/*/>*/}
-            <TextField variant="outlined" label="type value"
-                       value={newTaskTitle}
-                       onChange={onNewTitleChangeHandler}
-                       onKeyPress={onKeyPressHandler}
+            <TextField
+                disabled={disabled}
+                variant="outlined"
+                label="type value"
+                value={newTaskTitle}
+                onChange={onNewTitleChangeHandler}
+                onKeyPress={onKeyPressHandler}
                 // className={error ? "error" : ""}
-                       error={!!error}
-                       helperText={error}
+                error={!!error}
+                helperText={error}
             />
-            <IconButton onClick={addTask} color={"primary"}>
+            <IconButton onClick={addTask} color={"primary"} disabled={disabled}>
                 <ControlPoint/>
             </IconButton>
             {/*{error && <div className="error-message">{error}</div>}*/}
