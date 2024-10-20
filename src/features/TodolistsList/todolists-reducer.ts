@@ -49,7 +49,7 @@ export const setTodolistsAC = (todolists: Array<TodolistType>) => ({type: "SET-T
 
 // Создадим функцию, САНКУ-задача сделать асинх. работу, запросить данные и передать в Redux
 
-export const fetchTodolistsTC = () => (dispatch: Dispatch<ActionsType | setStatusActionType>) => {
+export const fetchTodolistsTC = () => (dispatch: ThunkDispatchType) => {
     //перед запросом крутилку покажи:
     dispatch(setStatusAC("loading"))
 
@@ -70,12 +70,17 @@ export const removeTodolistTC = (todolistId: string) => (dispatch: Dispatch<Acti
 }
 
 
-export const addTodolistTC = (title: string) => (dispatch: Dispatch<ActionsType>) => {
+export const addTodolistTC = (title: string) => (dispatch: ThunkDispatchType) => {
+    //перед запросом крутилку покажи:
+    dispatch(setStatusAC("loading"))
+
     todolistsAPI.createTodolist(title).then(res => {
         //сначала создадим на сервере нов тодолист, а когда придет ответ в BLL и т.д.
         const newTodo = res.data.data.item
         const action = addTodolistAC(newTodo)
         dispatch(action)
+        //крутилку убираем:
+        dispatch(setStatusAC("succeeded"))
     })
 }
 
@@ -99,3 +104,5 @@ type ActionsType =
     | ReturnType<typeof changeTodolistTitleAC>
     | ReturnType<typeof changeTodolistFilterAC>
     | SetTodolistsActionType
+
+type  ThunkDispatchType= Dispatch<ActionsType | setStatusActionType>
