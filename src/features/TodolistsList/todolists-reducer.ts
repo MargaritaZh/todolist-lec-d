@@ -1,13 +1,16 @@
 import {todolistsAPI, TodolistType} from "../../api/todolists-api";
 import {Dispatch} from "redux";
-import {setStatusAC, setStatusActionType} from "../../app/app-reducer";
+import {RequestStatusType, setStatusAC, setStatusActionType} from "../../app/app-reducer";
 
 
 export type  FilterValuesType = "all" | "active" | "completed"
 
 //склеиваем два типа TodolistType и недостающий элемент FILTER в типизацииTodolistType в API(с сервера)
 
-export type TodolistDomainType = TodolistType & { filter: FilterValuesType }
+export type TodolistDomainType = TodolistType & {
+    filter: FilterValuesType
+    entityStatus: RequestStatusType
+}
 
 //заменим тип на новый
 const initialState: Array<TodolistDomainType> = []
@@ -17,12 +20,12 @@ export const todolistsReducer = (state: Array<TodolistDomainType> = initialState
     switch (action.type) {
         ///////////////////
         case "SET-TODOLISTS":
-            return action.todolists.map((tl) => ({...tl, filter: "all"}))
+            return action.todolists.map((tl) => ({...tl, filter: "all", entityStatus: "idle"}))
         /////////////////////
         case "REMOVE-TODOLIST":
             return state.filter(todolist => todolist.id !== action.id)
         case "ADD-TODOLIST":
-            return [{...action.todolist, filter: "all"}, ...state]
+            return [{...action.todolist, filter: "all", entityStatus: "idle"}, ...state]
         case "CHANGE-TODOLIST-TITLE":
             return state.map(tl => tl.id === action.id ? {...tl, title: action.title} : tl)
         case "CHANGE-TODOLIST-FIlTER":
@@ -105,4 +108,4 @@ type ActionsType =
     | ReturnType<typeof changeTodolistFilterAC>
     | SetTodolistsActionType
 
-type  ThunkDispatchType= Dispatch<ActionsType | setStatusActionType>
+type  ThunkDispatchType = Dispatch<ActionsType | setStatusActionType>
