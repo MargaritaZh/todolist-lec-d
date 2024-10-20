@@ -1,6 +1,6 @@
 import {todolistsAPI, TodolistType} from "../../api/todolists-api";
 import {Dispatch} from "redux";
-import {RequestStatusType, setStatusAC, setStatusActionType} from "../../app/app-reducer";
+import {RequestStatusType, setAppStatusAC, setAppStatusActionType} from "../../app/app-reducer";
 
 
 export type  FilterValuesType = "all" | "active" | "completed"
@@ -62,28 +62,36 @@ export const setTodolistsAC = (todolists: Array<TodolistType>) => ({type: "SET-T
 
 export const fetchTodolistsTC = () => (dispatch: ThunkDispatchType) => {
     //перед запросом крутилку покажи:
-    dispatch(setStatusAC("loading"))
+    dispatch(setAppStatusAC("loading"))
 
     todolistsAPI.getTodolists()
         .then((res) => {
             dispatch(setTodolistsAC(res.data))
             //крутилку убираем:
-            dispatch(setStatusAC("succeeded"))
+            dispatch(setAppStatusAC("succeeded"))
         })
 }
 
 
-export const removeTodolistTC = (todolistId: string) => (dispatch: Dispatch<ActionsType>) => {
+export const removeTodolistTC = (todolistId: string) => (dispatch: ThunkDispatchType) => {
+    //покажи крутилку
+    dispatch(setAppStatusAC("loading"))
+    //измени статус сущности данного тодолиста на loading для дальнейшего управления disabled элементов
+    dispatch(changeTodolistEntityStatusAC(todolistId, "loading"))
+
     todolistsAPI.deleteTodolist(todolistId).then(res => {
         //сначала удалим тодолист на серере, и когда пришел ответ что удалился ,то и удалим из BLL
         dispatch(removeTodolistAC(todolistId))
+
+        //убрать крутилку
+        dispatch(setAppStatusAC("succeeded"))
     })
 }
 
 
 export const addTodolistTC = (title: string) => (dispatch: ThunkDispatchType) => {
     //перед запросом крутилку покажи:
-    dispatch(setStatusAC("loading"))
+    dispatch(setAppStatusAC("loading"))
 
     todolistsAPI.createTodolist(title).then(res => {
         //сначала создадим на сервере нов тодолист, а когда придет ответ в BLL и т.д.
@@ -91,7 +99,7 @@ export const addTodolistTC = (title: string) => (dispatch: ThunkDispatchType) =>
         const action = addTodolistAC(newTodo)
         dispatch(action)
         //крутилку убираем:
-        dispatch(setStatusAC("succeeded"))
+        dispatch(setAppStatusAC("succeeded"))
     })
 }
 
@@ -117,4 +125,4 @@ type ActionsType =
     | SetTodolistsActionType
     | ReturnType<typeof changeTodolistEntityStatusAC>
 
-type  ThunkDispatchType = Dispatch<ActionsType | setStatusActionType>
+type  ThunkDispatchType = Dispatch<ActionsType | setAppStatusActionType>

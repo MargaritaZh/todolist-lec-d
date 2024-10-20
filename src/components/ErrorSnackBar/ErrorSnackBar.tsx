@@ -3,7 +3,7 @@ import Snackbar, {SnackbarCloseReason} from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../middleware/store";
-import {setErrorAC} from "../../app/app-reducer";
+import {setAppErrorAC} from "../../app/app-reducer";
 
 export function ErrorSnackbars() {
     //мы убираем локальный стэйт
@@ -24,7 +24,7 @@ export function ErrorSnackbars() {
             return;
         }
         //теперь диспатчим null вместо ошибки
-        dispatch (setErrorAC(null))
+        dispatch (setAppErrorAC(null))
         // setOpen(false);
     };
 

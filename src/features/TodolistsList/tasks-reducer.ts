@@ -2,7 +2,7 @@ import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType}
 import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType} from "../../api/todolists-api";
 import {Dispatch} from "redux";
 import {AppRootStateType} from "../../middleware/store";
-import {setErrorAC, setErrorActionType, setStatusAC, setStatusActionType} from "../../app/app-reducer";
+import {setAppErrorAC, setAppErrorActionType, setAppStatusAC, setAppStatusActionType} from "../../app/app-reducer";
 
 
 export type TaskStateType = {
@@ -79,15 +79,15 @@ export const SetTasksAC = (tasks: Array<TaskType>, todolistId: string) => ({
 
 // Создадим функцию, САНКУ-задача сделать асинх. работу, запросить данные и ответ заdispatch в Redux,изменим state
 
-export const fetchTasksTC = (todolistId: string) => (dispatch: Dispatch<ActionsType | setStatusActionType>) => {
+export const fetchTasksTC = (todolistId: string) => (dispatch: Dispatch<ActionsType | setAppStatusActionType>) => {
     //перед запросом крутилку покажи:
-    dispatch(setStatusAC("loading"))
+    dispatch(setAppStatusAC("loading"))
 
     todolistsAPI.getTasks(todolistId)
         .then((res) => {
             dispatch(SetTasksAC(res.data.items, todolistId))
             //крутилку убираем:
-            dispatch(setStatusAC("succeeded"))
+            dispatch(setAppStatusAC("succeeded"))
         })
 }
 
@@ -99,9 +99,9 @@ export const deleteTaskTC = (taskId: string, todolistId: string) => (dispatch: D
     })
 }
 
-export const addTaskTC = (taskTitle: string, todolistId: string) => (dispatch: Dispatch<ActionsType | setErrorActionType | setStatusActionType>) => {
+export const addTaskTC = (taskTitle: string, todolistId: string) => (dispatch: Dispatch<ActionsType | setAppErrorActionType | setAppStatusActionType>) => {
     //крутилку покажи
-    dispatch(setStatusAC("loading"))
+    dispatch(setAppStatusAC("loading"))
     todolistsAPI.createTask(todolistId, taskTitle).then(res => {
             if (res.data.resultCode === 0) {
                 //dispatch action
@@ -110,15 +110,15 @@ export const addTaskTC = (taskTitle: string, todolistId: string) => (dispatch: D
                 const action = addTaskAC(task)
                 dispatch(action)
                 //крутилку убери:
-                dispatch(setStatusAC("succeeded"))
+                dispatch(setAppStatusAC("succeeded"))
             } else {
                 if (res.data.messages.length) {
-                    dispatch(setErrorAC(res.data.messages[0]))
+                    dispatch(setAppErrorAC(res.data.messages[0]))
                 } else {
-                    dispatch(setErrorAC("some error occurred"))
+                    dispatch(setAppErrorAC("some error occurred"))
                 }
                 //если ошибка то:
-                dispatch(setStatusAC("failed"))
+                dispatch(setAppStatusAC("failed"))
             }
         })
 }
