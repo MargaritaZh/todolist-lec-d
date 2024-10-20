@@ -107,7 +107,9 @@ export const deleteTaskTC = (taskId: string, todolistId: string) => (dispatch: D
     })
 }
 
-export const addTaskTC = (taskTitle: string, todolistId: string) => (dispatch: Dispatch<ActionsType | setErrorActionType>) => {
+export const addTaskTC = (taskTitle: string, todolistId: string) => (dispatch: Dispatch<ActionsType | setErrorActionType | setStatusActionType>) => {
+    //крутилку покажи
+    dispatch(setStatusAC("loading"))
     todolistsAPI.createTask(todolistId, taskTitle).then(res => {
             if (res.data.resultCode === 0) {
                 //dispatch action
@@ -115,15 +117,18 @@ export const addTaskTC = (taskTitle: string, todolistId: string) => (dispatch: D
                 const task = res.data.data.item
                 const action = addTaskAC(task)
                 dispatch(action)
+                //крутилку убери:
+                dispatch(setStatusAC("succeeded"))
             } else {
                 if (res.data.messages.length) {
                     dispatch(setErrorAC(res.data.messages[0]))
                 } else {
                     dispatch(setErrorAC("some error occurred"))
                 }
+                //если ошибка то:
+                dispatch(setStatusAC("failed"))
             }
-        }
-    )
+        })
 }
 
 
