@@ -3,6 +3,7 @@ import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelTyp
 import {Dispatch} from "redux";
 import {AppRootStateType} from "../../middleware/store";
 import {setAppErrorAC, SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType} from "../../app/app-reducer";
+import {handleServerAppError} from "../../utils/error-utils";
 
 
 export type TaskStateType = {
@@ -119,13 +120,9 @@ export const addTaskTC = (taskTitle: string, todolistId: string) => (dispatch: D
                 //крутилку убери:
                 dispatch(setAppStatusAC("succeeded"))
             } else {
-                if (res.data.messages.length) {
-                    dispatch(setAppErrorAC(res.data.messages[0]))
-                } else {
-                    dispatch(setAppErrorAC("some error occurred"))
-                }
-                //если ошибка то:
-                dispatch(setAppStatusAC("failed"))
+
+                handleServerAppError(res.data,dispatch)
+
             }
         })
         .catch((error) => {
@@ -174,16 +171,21 @@ export const updateTaskTC = (taskId: string, domainModel: UpdateDomainTaskModelT
                     //когда пришел твет с сервера, то уже обновляем в BLL и т.д.
                     dispatch(updateTaskAC(taskId, domainModel, todolistId))
                 } else {
-                    if (res.data.messages.length) {
-                        dispatch(setAppErrorAC(res.data.messages[0]))
-                    } else {
-                        dispatch(setAppErrorAC("some error occurred"))
-                    }
-                    //если ошибка то:
-                    dispatch(setAppStatusAC("failed"))
+
+                    handleServerAppError(res.data,dispatch)
+
+                    // if (res.data.messages.length) {
+                    //     dispatch(setAppErrorAC(res.data.messages[0]))
+                    // } else {
+                    //     dispatch(setAppErrorAC("some error occurred"))
+                    // }
+                    // //если ошибка то:
+                    // dispatch(setAppStatusAC("failed"))
                 }
             })
             .catch((error) => {
+                handleServerNetworkError()
+
                 dispatch(setAppErrorAC(error.message))
                 dispatch(setAppStatusAC("failed"))
             })
