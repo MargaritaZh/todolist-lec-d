@@ -126,8 +126,9 @@ export const addTaskTC = (taskTitle: string, todolistId: string) => (dispatch: D
             }
         })
         .catch((error) => {
-            dispatch(setAppErrorAC(error.message))
-            dispatch(setAppStatusAC("failed"))
+            handleServerNetworkError(error,dispatch)
+            // dispatch(setAppErrorAC(error.message))
+            // dispatch(setAppStatusAC("failed"))
         })
 }
 
