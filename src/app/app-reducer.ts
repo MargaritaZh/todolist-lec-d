@@ -1,10 +1,14 @@
 const initialState: InitialStateType = {
+    themeMode: "light",
     status: 'idle',
     error: null
 }
 
 export const appReducer = (state: InitialStateType = initialState, action: ActionsType): InitialStateType => {
     switch (action.type) {
+        case "CHANGE_THEME":
+            return {...state, themeMode: action.payload.themeMode}
+
         case 'APP-SET-STATUS':
             return {...state, status: action.status}
         case 'APP-SET-ERROR':
@@ -16,9 +20,13 @@ export const appReducer = (state: InitialStateType = initialState, action: Actio
 
 //type
 
+
+export type ThemeMode = "dark" | "light"
+
 export type RequestStatusType = "idle" | "loading" | "succeeded" | "failed"
 
 export type InitialStateType = {
+    themeMode: ThemeMode,
     //происходит ли сейчас взаимодействие с сервером
     //еще запроса не было|запрос идет ждем ответа|ответ пришел все хорошо|ошибка была,ответ зафейлился плохим результатом, мы в этом случае должны засэтать ошибку или null если ошибки нет
     status: RequestStatusType,
@@ -30,6 +38,7 @@ export type InitialStateType = {
 type ActionsType =
     | SetAppErrorActionType
     | SetAppStatusActionType
+    | ReturnType<typeof changeThemeAC>
 
 export type SetAppErrorActionType = ReturnType<typeof setAppErrorAC>
 
@@ -39,3 +48,10 @@ export type SetAppStatusActionType = ReturnType<typeof setAppStatusAC>
 export const setAppErrorAC = (error: string | null) => ({type: "APP-SET-ERROR", error} as const)
 
 export const setAppStatusAC = (status: RequestStatusType) => ({type: "APP-SET-STATUS", status} as const)
+
+export const changeThemeAC = (themeMode: ThemeMode) => {
+    return {
+        type: "CHANGE_THEME",
+        payload: {themeMode},
+    } as const
+}

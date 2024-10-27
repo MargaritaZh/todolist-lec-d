@@ -83,6 +83,7 @@ const initialGlobalState: AppRootStateType = {
         ]
     },
     app: {
+        themeMode:"light",
         error: null,
         status: "idle"
     }
