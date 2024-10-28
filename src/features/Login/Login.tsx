@@ -7,16 +7,24 @@ import FormLabel from '@mui/material/FormLabel'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import {getTheme} from "../../common/theme/theme";
-import {useSelector} from "react-redux";
-import {AppRootStateType} from "../../middleware/store";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, AppRootStateType} from "../../middleware/store";
 import {ThemeMode} from "../../app/app-reducer";
 import {useFormik} from "formik"
+import {loginTC} from "./auth-reducer";
+import React from "react";
+import {Navigate} from "react-router-dom"
 
 
 export const Login = () => {
+
+    const dispatch:AppDispatch  = useDispatch()
+
     // const themeMode = useAppSelector(selectThemeMode)
     const themeMode = useSelector<AppRootStateType, ThemeMode>(state => state.app.themeMode)
     const theme = getTheme(themeMode)
+
+    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn)
 
 
     const formik = useFormik({
@@ -28,23 +36,30 @@ export const Login = () => {
                     email: "Email is required"
                 }
             }
-            if(!values.password){
+            if (!values.password) {
                 return {
                     password: "Password is required"
                 }
             }
         },
-
         initialValues: {
             email: '',
             password: '',
             rememberMe: false,
         },
         onSubmit: values => {
+            //задиспатчтм здесь ТС,когда уже собрали данные с формы
+
+            dispatch(loginTC(values))
+            /////////////
             alert(JSON.stringify(values))
         },
     })
 
+//если ты залогинен true-вернись на главную страницу
+    if (isLoggedIn) {
+        return <Navigate to={"/"}/>
+    }
 
     return (
         <Grid container justifyContent={'center'}>

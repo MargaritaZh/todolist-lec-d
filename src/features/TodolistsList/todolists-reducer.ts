@@ -1,6 +1,7 @@
 import {todolistsAPI, TodolistType} from "../../api/todolists-api";
 import {Dispatch} from "redux";
 import {RequestStatusType, setAppStatusAC, SetAppStatusActionType} from "../../app/app-reducer";
+import {handleServerNetworkError} from "../../utils/error-utils";
 
 
 export type  FilterValuesType = "all" | "active" | "completed"
@@ -69,6 +70,9 @@ export const fetchTodolistsTC = () => (dispatch: ThunkDispatchType) => {
             dispatch(setTodolistsAC(res.data))
             //крутилку убираем:
             dispatch(setAppStatusAC("succeeded"))
+        })
+        .catch((error)=>{
+            handleServerNetworkError(error,dispatch)
         })
 }
 
