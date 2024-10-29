@@ -25,17 +25,16 @@ export const setIsLoggedInAC = (value: boolean) => ({type: "login/SET-IS-LOGGED-
 //thunks
 
 
-
-
 // Создадим функцию, САНКУ-задача сделать асинх. работу, запросить данные и ответ заdispatch в Redux,изменим state
 
+//закинем в санку собранные с формочки данные в объект data
 export const loginTC = (data: LoginParamsType) => (dispatch: Dispatch<ActionsType | SetAppStatusActionType | SetAppErrorActionType>) => {
     //крутилку покажи
     dispatch(setAppStatusAC("loading"))
     authAPI.login(data)
         .then(res => {
             if (res.data.resultCode === 0) {
-                //залогинились удачно
+                //залогинились удачно передаем true
                 dispatch(setIsLoggedInAC(true))
 
                 //крутилку убери:
@@ -56,7 +55,7 @@ export const logoutTC = () => (dispatch: Dispatch<ActionsType | SetAppStatusActi
     authAPI.logout()
         .then(res => {
             if (res.data.resultCode === 0) {
-                //залогинились удачно
+                //выйти из приложения false
                 dispatch(setIsLoggedInAC(false))
 
                 //крутилку убери:

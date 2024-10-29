@@ -70,7 +70,9 @@ export const initializeAppTC = () => (dispatch: Dispatch) => {
                 handleServerAppError(res.data, dispatch)
             }
 
-            //задиспатчим значение для auth редьюсера чо мы залогинены
+
+            //задиспатчим значение для auth -редьюсера что мы залогинены/
+            // который решает показывать формочку либо нет взависимости от значения setIsLoggedIn
             dispatch(setIsLoggedInAC(true))
         })
 

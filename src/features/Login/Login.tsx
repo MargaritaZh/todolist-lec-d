@@ -29,7 +29,9 @@ export const Login = () => {
 
     const formik = useFormik({
 
-        //функция для валидации
+        //функция для валидации,
+        //вернуть объекты, с теми же свойствами полей,которые у нас есть
+        // настроим валидацию,что показать в случае ошибки
         validate: (values) => {
             if (!values.email) {
                 return {
@@ -43,13 +45,13 @@ export const Login = () => {
             }
         },
         initialValues: {
+            // допишем нужные поля
             email: '',
             password: '',
             rememberMe: false,
         },
         onSubmit: values => {
-            //задиспатчтм здесь ТС,когда уже собрали данные с формы
-
+            //!!!задиспатчим здесь объект с собранными данными с формочки в TC
             dispatch(loginTC(values))
             /////////////
             alert(JSON.stringify(values))
@@ -64,6 +66,8 @@ export const Login = () => {
     return (
         <Grid container justifyContent={'center'}>
             <Grid item justifyContent={'center'}>
+                {/*когда форма сабмитется,выполняется callback --->onSubmit*/}
+                {/*при нажатии на кнопку,забираются все данные из формочки пд капотом onSubmit={formik.handleSubmit}*/}
                 <form onSubmit={formik.handleSubmit}>
                     <FormControl>
                         <FormLabel>
@@ -90,8 +94,11 @@ export const Login = () => {
                             <TextField
                                 label="Email"
                                 margin="normal"
+                                // сделаем контролируемыми эти поля
+                                // мы говорим дай мне пропсы ,поле name должно совпадать с созданными в values
                                 {...formik.getFieldProps("email")}
                             />
+                            {/*отобрази ошибку валидации*/}
                             {formik.errors.email ? <div>{formik.errors.email}</div> : null}
                             <TextField
                                 type="password"
@@ -99,6 +106,7 @@ export const Login = () => {
                                 margin="normal"
                                 {...formik.getFieldProps("password")}
                             />
+                            {/*отобрази ошибку валидации*/}
                             {formik.errors.password ? <div>{formik.errors.password}</div> : null}
                             <FormControlLabel
                                 label={'Remember me'}
@@ -107,6 +115,7 @@ export const Login = () => {
                                         //
                                         {...formik.getFieldProps("rememberMe")}
                                         checked={formik.values.rememberMe}
+                                        // допишем что значение checked мы будем брать из ...
                                         //
                                     />
                                 }

@@ -34,6 +34,9 @@ function AppWithRedux({demo = false, ...props}: PropsType) {
 
     const isLoggedIn = useSelector<AppRootStateType, boolean>((state) => state.auth.isLoggedIn)
 
+
+    //мы должны один раз проинициализировать приложение,когда компанента вмонтировалась
+    // вызовется один раз раз []
     useEffect(() => {
         dispatch(initializeAppTC())
     }, [])
