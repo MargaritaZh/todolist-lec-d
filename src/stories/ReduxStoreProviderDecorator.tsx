@@ -85,7 +85,8 @@ const initialGlobalState: AppRootStateType = {
     app: {
         themeMode:"light",
         error: null,
-        status: "idle"
+        status: "idle",
+        isInitialized:false
     },
     auth: {
         isLoggedIn:false

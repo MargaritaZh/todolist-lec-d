@@ -6,7 +6,8 @@ beforeEach(() => {
     startState = {
         themeMode:"light",
         error: null,
-        status:"idle"
+        status:"idle",
+        isInitialized:false
     }
 })
 

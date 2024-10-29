@@ -1,17 +1,26 @@
+import {Dispatch} from "redux";
+import {authAPI} from "../api/todolists-api";
+import {setIsLoggedInAC} from "../features/Login/auth-reducer";
+import {handleServerAppError} from "../utils/error-utils";
+
 const initialState: InitialStateType = {
     themeMode: "light",
     status: 'idle',
-    error: null
+    error: null,
+    isInitialized: false,
 }
 
 export const appReducer = (state: InitialStateType = initialState, action: ActionsType): InitialStateType => {
     switch (action.type) {
+        case "APP/SET-IS-INITIALISED":
+            return {...state, isInitialized: action.value}
+
         case "CHANGE_THEME":
             return {...state, themeMode: action.payload.themeMode}
 
-        case 'APP-SET-STATUS':
+        case 'APP/SET-STATUS':
             return {...state, status: action.status}
-        case 'APP-SET-ERROR':
+        case 'APP/SET-ERROR':
             return {...state, error: action.error}
         default:
             return state
@@ -32,22 +41,48 @@ export type InitialStateType = {
     status: RequestStatusType,
     //если ошибка какая-то глобальнпя произойдет -мы запишем текст ошибки сюда
     error: string | null
-
+    //true когда приложение проинициализировалось (проверили юзера,настройки получили и т.д.)
+    isInitialized: boolean
 }
 
 type ActionsType =
     | SetAppErrorActionType
     | SetAppStatusActionType
     | ReturnType<typeof changeThemeAC>
+    | ReturnType<typeof setAppInitializedAC>
+    | ReturnType<typeof setAppInitializedAC>
 
 export type SetAppErrorActionType = ReturnType<typeof setAppErrorAC>
 
 export type SetAppStatusActionType = ReturnType<typeof setAppStatusAC>
 
-//action
-export const setAppErrorAC = (error: string | null) => ({type: "APP-SET-ERROR", error} as const)
+//thunk
 
-export const setAppStatusAC = (status: RequestStatusType) => ({type: "APP-SET-STATUS", status} as const)
+export const initializeAppTC = () => (dispatch: Dispatch) => {
+
+    //санка должна отправить запрос на сервер и спросить залогинены мы или нет
+    authAPI.me()
+        .then(res => {
+            if (res.data.resultCode === 0) {
+                //мы залогинены
+                dispatch(setAppInitializedAC(true))
+            } else {
+                handleServerAppError(res.data, dispatch)
+            }
+
+            //задиспатчим значение для auth редьюсера чо мы залогинены
+            dispatch(setIsLoggedInAC(true))
+        })
+
+}
+
+//action
+export const setAppErrorAC = (error: string | null) => ({type: "APP/SET-ERROR", error} as const)
+
+export const setAppStatusAC = (status: RequestStatusType) => ({type: "APP/SET-STATUS", status} as const)
+
+export const setAppInitializedAC = (value: boolean) => ({type: "APP/SET-IS-INITIALISED", value} as const)
+
 
 export const changeThemeAC = (themeMode: ThemeMode) => {
     return {
