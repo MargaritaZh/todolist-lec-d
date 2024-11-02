@@ -16,7 +16,7 @@ import {ErrorSnackbars} from "../components/ErrorSnackBar/ErrorSnackBar";
 import {AppDispatch, AppRootStateType} from "../middleware/store";
 import {initializeAppTC, RequestStatusType} from "./app-reducer";
 import {useDispatch, useSelector} from "react-redux";
-import {Navigate, Route, Routes, useNavigate} from 'react-router-dom';
+import {Route, Routes, useNavigate} from 'react-router-dom';
 import {Login} from "../features/Login/Login";
 import {logoutTC} from "../features/Login/auth-reducer";
 
@@ -90,13 +90,9 @@ function AppWithRedux({demo = false, ...props}: PropsType) {
 
                 <Container fixed>
                     <Routes>
-                        <Route path="/" element={isLoggedIn ? <TodolistsList demo={demo} /> : <Navigate to="/login" replace />} />
-                        <Route path="/login" element={<Login />} />
+                        <Route path="/" element={<TodolistsList demo={demo}/>}/>
+                        <Route path="/login" element={<Login/>}/>
                     </Routes>
-                    {/*<Routes>*/}
-                    {/*    <Route path="/" element={<TodolistsList demo={demo}/>}/>*/}
-                    {/*    <Route path="/login" element={<Login/>}/>*/}
-                    {/*</Routes>*/}
                 </Container>
             </div>
 
