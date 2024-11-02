@@ -2,6 +2,7 @@ import {SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType} from "../
 import {Dispatch} from "redux";
 import {authAPI, LoginParamsType} from "../../api/todolists-api";
 import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
+import {ClearDataActionType, clearTodosDataAC} from "../TodolistsList/todolists-reducer";
 
 
 const initialState: InitialStateType = {
@@ -49,10 +50,10 @@ export const loginTC = (data: LoginParamsType) => (dispatch: Dispatch<ActionsTyp
 }
 
 
-export const logoutTC = () => (dispatch: Dispatch<ActionsType | SetAppStatusActionType | SetAppErrorActionType>) => {
+export const logoutTC = () => (dispatch: Dispatch<ActionsType | SetAppStatusActionType | SetAppErrorActionType | ClearDataActionType>) => {
     //крутилку покажи
     dispatch(setAppStatusAC("loading"))
-   return authAPI.logout()
+    return authAPI.logout()
         .then(res => {
             if (res.data.resultCode === 0) {
                 //выйти из приложения false
@@ -60,6 +61,10 @@ export const logoutTC = () => (dispatch: Dispatch<ActionsType | SetAppStatusActi
 
                 //крутилку убери:
                 dispatch(setAppStatusAC("succeeded"))
+
+                //зачисти данные после вылогинивания
+                dispatch(clearTodosDataAC())
+
             } else {
                 handleServerAppError(res.data, dispatch)
             }

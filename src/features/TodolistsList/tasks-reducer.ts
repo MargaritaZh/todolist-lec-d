@@ -1,8 +1,13 @@
-import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType} from "./todolists-reducer";
+import {
+    AddTodolistActionType,
+    ClearDataActionType,
+    RemoveTodolistActionType,
+    SetTodolistsActionType
+} from "./todolists-reducer";
 import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType} from "../../api/todolists-api";
 import {Dispatch} from "redux";
 import {AppRootStateType} from "../../middleware/store";
-import {setAppErrorAC, SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType} from "../../app/app-reducer";
+import {SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType} from "../../app/app-reducer";
 import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
 
 
@@ -59,6 +64,8 @@ export const tasksReducer = (state: TaskStateType = initialState, action: Action
                 ...state,
                 [action.todolistId]: action.tasks
             }
+        case "CLEA-DATA":
+            return {}
         default:
             return state
     }
@@ -121,12 +128,12 @@ export const addTaskTC = (taskTitle: string, todolistId: string) => (dispatch: D
                 dispatch(setAppStatusAC("succeeded"))
             } else {
 
-                handleServerAppError(res.data,dispatch)
+                handleServerAppError(res.data, dispatch)
 
             }
         })
         .catch((error) => {
-            handleServerNetworkError(error,dispatch)
+            handleServerNetworkError(error, dispatch)
             // dispatch(setAppErrorAC(error.message))
             // dispatch(setAppStatusAC("failed"))
         })
@@ -173,7 +180,7 @@ export const updateTaskTC = (taskId: string, domainModel: UpdateDomainTaskModelT
                     dispatch(updateTaskAC(taskId, domainModel, todolistId))
                 } else {
 
-                    handleServerAppError(res.data,dispatch)
+                    handleServerAppError(res.data, dispatch)
 
                     // if (res.data.messages.length) {
                     //     dispatch(setAppErrorAC(res.data.messages[0]))
@@ -185,7 +192,7 @@ export const updateTaskTC = (taskId: string, domainModel: UpdateDomainTaskModelT
                 }
             })
             .catch((error) => {
-                handleServerNetworkError(error,dispatch)
+                handleServerNetworkError(error, dispatch)
                 //
                 // dispatch(setAppErrorAC(error.message))
                 // dispatch(setAppStatusAC("failed"))
@@ -203,5 +210,6 @@ type ActionsType =
     | AddTodolistActionType
     | RemoveTodolistActionType
     | SetTodolistsActionType
+    | ClearDataActionType
 
 type  ThunkDispatchType = Dispatch<ActionsType | SetAppStatusActionType | SetAppErrorActionType>

@@ -30,12 +30,12 @@ export const Todolist = React.memo(function ({demo = false, ...props}: TodolistP
 
     const dispatch = useDispatch<AppDispatch>()
 
-    useEffect(() => {
-        if (demo) {
-            return
-        }
-        dispatch(fetchTasksTC(props.todolist.id))
-    }, [])
+    // useEffect(() => {
+    //     if (demo) {
+    //         return
+    //     }
+    //     dispatch(fetchTasksTC(props.todolist.id))
+    // }, [])
 
     const onAllClickHandler = useCallback(() => {
         props.changeFilter("all", props.todolist.id)
