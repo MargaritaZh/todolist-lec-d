@@ -4,7 +4,7 @@ const settings = {
     withCredentials: true,
     headers: {
         'API-KEY': '32f2b4a6-0672-4ffa-9026-e2be7bac6297',
-        'Authorization': 'Bearer 2b74339b-0a5a-4f3c-97c3-9318ffaa1d4e'
+        'Authorization': 'Bearer 6265ac9e-8535-4504-9899-9229fed81f87'
     }
 }
 

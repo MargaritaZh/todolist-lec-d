@@ -52,7 +52,7 @@ export const loginTC = (data: LoginParamsType) => (dispatch: Dispatch<ActionsTyp
 export const logoutTC = () => (dispatch: Dispatch<ActionsType | SetAppStatusActionType | SetAppErrorActionType>) => {
     //крутилку покажи
     dispatch(setAppStatusAC("loading"))
-    authAPI.logout()
+   return authAPI.logout()
         .then(res => {
             if (res.data.resultCode === 0) {
                 //выйти из приложения false

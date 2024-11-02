@@ -16,7 +16,7 @@ import {ErrorSnackbars} from "../components/ErrorSnackBar/ErrorSnackBar";
 import {AppDispatch, AppRootStateType} from "../middleware/store";
 import {initializeAppTC, RequestStatusType} from "./app-reducer";
 import {useDispatch, useSelector} from "react-redux";
-import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import {Navigate, Route, Routes, useNavigate} from 'react-router-dom';
 import {Login} from "../features/Login/Login";
 import {logoutTC} from "../features/Login/auth-reducer";
 
@@ -25,6 +25,8 @@ type PropsType = {
 }
 
 function AppWithRedux({demo = false, ...props}: PropsType) {
+
+    const navigate = useNavigate();
 
     const dispatch: AppDispatch = useDispatch()
 
@@ -41,13 +43,15 @@ function AppWithRedux({demo = false, ...props}: PropsType) {
         dispatch(initializeAppTC())
     }, [])
 
+
+
     const logoutHandler = useCallback(() => {
-        dispatch(logoutTC())
+        dispatch(logoutTC()).then(() => {
+            navigate('/login');
+        });
+    }, [dispatch, navigate])
 
-    }, [])
-
-
-    //если пользователь не проинициализирован,то покажем красивую анимированную крутилку
+    // если пользователь не проинициализирован,то покажем красивую анимированную крутилку
     if (!isInitialized) {
         return (<div style={{position: "fixed", top: "30%", textAlign: "center", width: "100%"}}>
             <CircularProgress/>
@@ -57,7 +61,7 @@ function AppWithRedux({demo = false, ...props}: PropsType) {
 
 
     return (
-        <BrowserRouter>
+
             <div className="App">
                 <ErrorSnackbars/>
                 <AppBar position="static">
@@ -83,16 +87,19 @@ function AppWithRedux({demo = false, ...props}: PropsType) {
                     {status === "loading" && <LinearProgress/>}
 
                 </AppBar>
+
                 <Container fixed>
-                    {/*<Route exact path={"/"} render={()=><TodolistsList demo={demo}/>}/>*/}
-                    {/*<Route path={"/login"} render={()=><Login/>}/>*/}
                     <Routes>
-                        <Route path="/" element={<TodolistsList demo={demo}/>}/>
-                        <Route path="/login" element={<Login/>}/>
+                        <Route path="/" element={isLoggedIn ? <TodolistsList demo={demo} /> : <Navigate to="/login" replace />} />
+                        <Route path="/login" element={<Login />} />
                     </Routes>
+                    {/*<Routes>*/}
+                    {/*    <Route path="/" element={<TodolistsList demo={demo}/>}/>*/}
+                    {/*    <Route path="/login" element={<Login/>}/>*/}
+                    {/*</Routes>*/}
                 </Container>
             </div>
-        </BrowserRouter>
+
     )
 }
 

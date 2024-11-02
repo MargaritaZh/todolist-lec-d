@@ -1,7 +1,7 @@
 import {Dispatch} from "redux";
 import {authAPI} from "../api/todolists-api";
 import {setIsLoggedInAC} from "../features/Login/auth-reducer";
-import {handleServerAppError} from "../utils/error-utils";
+import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
 
 const initialState: InitialStateType = {
     themeMode: "light",
@@ -58,25 +58,53 @@ export type SetAppStatusActionType = ReturnType<typeof setAppStatusAC>
 
 //thunk
 
-export const initializeAppTC = () => (dispatch: Dispatch) => {
+// export const initializeAppTC = () => (dispatch: Dispatch) => {
+//
+//     //санка должна отправить запрос на сервер и спросить залогинены мы или нет
+//     authAPI.me()
+//         .then(res => {
+//             if (res.data.resultCode === 0) {
+//                 //мы залогинены
+//                 dispatch(setAppInitializedAC(true))
+//             } else {
+//                 handleServerAppError(res.data, dispatch)
+//             }
+//
+//
+//             //задиспатчим значение для auth -редьюсера что мы залогинены/
+//             // который решает показывать формочку либо нет взависимости от значения setIsLoggedIn
+//             dispatch(setIsLoggedInAC(true))
+//         })
+//
+// }
 
+
+export const initializeAppTC = () => (dispatch: Dispatch) => {
+    dispatch(setAppStatusAC('loading'));
     //санка должна отправить запрос на сервер и спросить залогинены мы или нет
     authAPI.me()
         .then(res => {
             if (res.data.resultCode === 0) {
-                //мы залогинены
-                dispatch(setAppInitializedAC(true))
+                // Мы залогинены
+                dispatch(setIsLoggedInAC(true));
             } else {
-                handleServerAppError(res.data, dispatch)
+                handleServerAppError(res.data, dispatch);
             }
-
-
-            //задиспатчим значение для auth -редьюсера что мы залогинены/
-            // который решает показывать формочку либо нет взависимости от значения setIsLoggedIn
-            dispatch(setIsLoggedInAC(true))
         })
+        .catch(e => {
+            handleServerNetworkError(e, dispatch);
+        })
+        .finally(() => {
+            // Убрать моргание, покажем крутилку пока идет запрос me, изначально isInitialized - false
+            // Когда мы уже узнали ответ от сервера был ли пользователь ранее проинициализирован, неважно да или нет,
+            // Мы уже изменим значение isInitialized на true и уберем крутилку
+            dispatch(setAppInitializedAC(true));
+            dispatch(setAppStatusAC('succeeded'));
+        });
+};
 
-}
+
+
 
 //action
 export const setAppErrorAC = (error: string | null) => ({type: "APP/SET-ERROR", error} as const)

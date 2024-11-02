@@ -20,8 +20,8 @@ export const Login = () => {
 
     const dispatch:AppDispatch  = useDispatch()
 
-    // const themeMode = useAppSelector(selectThemeMode)
     const themeMode = useSelector<AppRootStateType, ThemeMode>(state => state.app.themeMode)
+
     const theme = getTheme(themeMode)
 
     const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn)
@@ -54,7 +54,11 @@ export const Login = () => {
             //!!!задиспатчим здесь объект с собранными данными с формочки в TC
             dispatch(loginTC(values))
             /////////////
-            alert(JSON.stringify(values))
+            // alert(JSON.stringify(values))
+
+            //зачистить форму после отправки данных
+            formik.resetForm()
+
         },
     })
 
