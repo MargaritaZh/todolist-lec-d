@@ -24,7 +24,7 @@ export function ErrorSnackbars() {
             return;
         }
         //теперь диспатчим null вместо ошибки
-        dispatch (setAppErrorAC(null))
+        dispatch (setAppErrorAC({error: null}))
         // setOpen(false);
     };
 

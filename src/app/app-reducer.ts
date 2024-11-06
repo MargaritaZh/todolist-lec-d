@@ -1,34 +1,8 @@
-
 import {Dispatch} from "redux";
 import {authAPI} from "../api/todolists-api";
 import {setIsLoggedInAC} from "../features/Login/auth-reducer";
 import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
-
-const initialState: InitialStateType = {
-    themeMode: "light",
-    status: 'idle',
-    error: null,
-    isInitialized: false,
-}
-
-export const appReducer = (state: InitialStateType = initialState, action: ActionsType): InitialStateType => {
-    switch (action.type) {
-        case "APP/SET-IS-INITIALISED":
-            return {...state, isInitialized: action.value}
-
-        case "CHANGE_THEME":
-            return {...state, themeMode: action.payload.themeMode}
-
-        case 'APP/SET-STATUS':
-            return {...state, status: action.status}
-        case 'APP/SET-ERROR':
-            return {...state, error: action.error}
-        default:
-            return state
-    }
-}
-
-//type
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 
 export type ThemeMode = "dark" | "light"
@@ -46,42 +20,64 @@ export type InitialStateType = {
     isInitialized: boolean
 }
 
-type ActionsType =
-    | SetAppErrorActionType
-    | SetAppStatusActionType
-    | ReturnType<typeof changeThemeAC>
-    | ReturnType<typeof setAppInitializedAC>
-    | ReturnType<typeof setAppInitializedAC>
 
-export type SetAppErrorActionType = ReturnType<typeof setAppErrorAC>
+const initialState: InitialStateType = {
+    themeMode: "light",
+    status: 'idle',
+    error: null,
+    isInitialized: false,
+}
 
-export type SetAppStatusActionType = ReturnType<typeof setAppStatusAC>
 
-//thunk
+const slice=createSlice({
+    name:"app",
+    initialState:initialState,
+    reducers:{
+        //как маленький подредьюсер
+        setAppInitializedAC(state, action:PayloadAction<{value: boolean}>){
+           state.isInitialized=action.payload.value
+        },
+        //еще подредьюсер
+        setAppStatusAC(state, action:PayloadAction<{status: RequestStatusType}> ){
+           state.status= action.payload.status
+        },
+        setAppErrorAC (state, action:PayloadAction<{ error: string | null}>){
+            state.error=action.payload.error
+        },
+        changeThemeAC(state, action: PayloadAction<{themeMode: ThemeMode}>){
+           state.themeMode= action.payload.themeMode
+        }
+    }
+})
 
-// export const initializeAppTC = () => (dispatch: Dispatch) => {
-//
-//     //санка должна отправить запрос на сервер и спросить залогинены мы или нет
-//     authAPI.me()
-//         .then(res => {
-//             if (res.data.resultCode === 0) {
-//                 //мы залогинены
-//                 dispatch(setAppInitializedAC(true))
-//             } else {
-//                 handleServerAppError(res.data, dispatch)
-//             }
-//
-//
-//             //задиспатчим значение для auth -редьюсера что мы залогинены/
-//             // который решает показывать формочку либо нет взависимости от значения setIsLoggedIn
-//             dispatch(setIsLoggedInAC(true))
-//         })
-//
+
+export const appReducer=slice.reducer
+
+export const {setAppInitializedAC,setAppStatusAC,setAppErrorAC,changeThemeAC}=slice.actions
+
+
+// export const appReducer = (state: InitialStateType = initialState, action: ActionsType): InitialStateType => {
+//     switch (action.type) {
+        // case "APP/SET-IS-INITIALISED":
+        //     return {...state, isInitialized: action.value}
+
+        // case "CHANGE_THEME":
+        //     return {...state, themeMode: action.payload.themeMode}
+
+        // case 'APP/SET-STATUS':
+        //     return {...state, status: action.status}
+        // case 'APP/SET-ERROR':
+        //     return {...state, error: action.error}
+//         default:
+//             return state
+//     }
 // }
 
 
+//thunk
+
 export const initializeAppTC = () => (dispatch: Dispatch) => {
-    dispatch(setAppStatusAC('loading'));
+    dispatch(setAppStatusAC({status:'loading'}));
     //санка должна отправить запрос на сервер и спросить залогинены мы или нет
     authAPI.me()
         .then(res => {
@@ -99,25 +95,38 @@ export const initializeAppTC = () => (dispatch: Dispatch) => {
             // Убрать моргание, покажем крутилку пока идет запрос me, изначально isInitialized - false
             // Когда мы уже узнали ответ от сервера был ли пользователь ранее проинициализирован, неважно да или нет,
             // Мы уже изменим значение isInitialized на true и уберем крутилку
-            dispatch(setAppInitializedAC(true));
-            dispatch(setAppStatusAC('succeeded'));
+            dispatch(setAppInitializedAC({value:true}));
+            dispatch(setAppStatusAC({status:'succeeded'}));
         });
 };
 
 
-
-
 //action
-export const setAppErrorAC = (error: string | null) => ({type: "APP/SET-ERROR", error} as const)
 
-export const setAppStatusAC = (status: RequestStatusType) => ({type: "APP/SET-STATUS", status} as const)
+// export const setAppErrorAC = (error: string | null) => ({type: "APP/SET-ERROR", error} as const)
 
-export const setAppInitializedAC = (value: boolean) => ({type: "APP/SET-IS-INITIALISED", value} as const)
+// export const setAppStatusAC = (status: RequestStatusType) => ({type: "APP/SET-STATUS", status} as const)
+
+// export const setAppInitializedAC = (value: boolean) => ({type: "APP/SET-IS-INITIALISED", value} as const)
 
 
-export const changeThemeAC = (themeMode: ThemeMode) => {
-    return {
-        type: "CHANGE_THEME",
-        payload: {themeMode},
-    } as const
-}
+// export const changeThemeAC = (themeMode: ThemeMode) => {
+//     return {
+//         type: "CHANGE_THEME",
+//         payload: {themeMode},
+//     } as const
+// }
+
+
+//types
+
+// type ActionsType =
+//     | SetAppErrorActionType
+//     | SetAppStatusActionType
+//     | ReturnType<typeof changeThemeAC>
+// | ReturnType<typeof setAppInitializedAC>
+
+
+// export type SetAppErrorActionType = ReturnType<typeof setAppErrorAC>
+//
+// export type SetAppStatusActionType = ReturnType<typeof setAppStatusAC>

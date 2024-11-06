@@ -1,6 +1,6 @@
 import {todolistsAPI, TodolistType} from "../../api/todolists-api";
-import {Dispatch} from "redux";
-import {RequestStatusType, setAppStatusAC, SetAppStatusActionType} from "../../app/app-reducer";
+import {Action, Dispatch} from "redux";
+import {RequestStatusType, setAppStatusAC} from "../../app/app-reducer";
 import {handleServerNetworkError} from "../../utils/error-utils";
 import {fetchTasksTC} from "./tasks-reducer";
 import {ThunkDispatch} from "redux-thunk";
@@ -70,15 +70,15 @@ export const clearTodosDataAC = () => ({type: "CLEA-DATA"} as const)
 // Создадим функцию, САНКУ-задача сделать асинх. работу, запросить данные и передать в Redux
 
 //ЗАДИСПАТЧИМ САНКУ В САНКЕ И уберем useEfffect и запрос за тасками в компаненте todolist
-export const fetchTodolistsTC = () => (dispatch: ThunkDispatch<RootState, unknown, ActionsType | SetAppStatusActionType>) => {
+export const fetchTodolistsTC = () => (dispatch: ThunkDispatch<RootState, unknown, ActionsType>) => {
     //перед запросом крутилку покажи:
-    dispatch(setAppStatusAC("loading"))
+    dispatch(setAppStatusAC({status: "loading"}))
 
     todolistsAPI.getTodolists()
         .then((res) => {
             dispatch(setTodolistsAC(res.data))
             //крутилку убираем:
-            dispatch(setAppStatusAC("succeeded"))
+            dispatch(setAppStatusAC({status: "succeeded"}))
             return res.data
         })
         .then((todos) => {
@@ -91,9 +91,10 @@ export const fetchTodolistsTC = () => (dispatch: ThunkDispatch<RootState, unknow
         })
 }
 
-export const removeTodolistTC = (todolistId: string) => (dispatch: ThunkDispatchType) => {
+
+export const removeTodolistTC = (todolistId: string) => (dispatch: Dispatch) => {
     //покажи крутилку
-    dispatch(setAppStatusAC("loading"))
+    dispatch(setAppStatusAC({status: "loading"}))
     //измени статус сущности данного тодолиста на loading для дальнейшего управления disabled элементов
     dispatch(changeTodolistEntityStatusAC(todolistId, "loading"))
 
@@ -102,14 +103,14 @@ export const removeTodolistTC = (todolistId: string) => (dispatch: ThunkDispatch
         dispatch(removeTodolistAC(todolistId))
 
         //убрать крутилку
-        dispatch(setAppStatusAC("succeeded"))
+        dispatch(setAppStatusAC({status: "succeeded"}))
     })
 }
 
 
-export const addTodolistTC = (title: string) => (dispatch: ThunkDispatchType) => {
+export const addTodolistTC = (title: string) => (dispatch: Dispatch) => {
     //перед запросом крутилку покажи:
-    dispatch(setAppStatusAC("loading"))
+    dispatch(setAppStatusAC({status: "loading"}))
 
     todolistsAPI.createTodolist(title).then(res => {
         //сначала создадим на сервере нов тодолист, а когда придет ответ в BLL и т.д.
@@ -117,7 +118,7 @@ export const addTodolistTC = (title: string) => (dispatch: ThunkDispatchType) =>
         const action = addTodolistAC(newTodo)
         dispatch(action)
         //крутилку убираем:
-        dispatch(setAppStatusAC("succeeded"))
+        dispatch(setAppStatusAC({status: "succeeded"}))
     })
 }
 
@@ -144,5 +145,9 @@ type ActionsType =
     | SetTodolistsActionType
     | ReturnType<typeof changeTodolistEntityStatusAC>
     | ClearDataActionType
+    //добавили тип чтобы работами диспатчились две санки
+    | ReturnType<typeof setAppStatusAC>
 
-type  ThunkDispatchType = Dispatch<ActionsType | SetAppStatusActionType>
+
+
+

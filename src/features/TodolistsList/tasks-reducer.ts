@@ -7,7 +7,7 @@ import {
 import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType} from "../../api/todolists-api";
 import {Dispatch} from "redux";
 import {AppRootStateType} from "../../middleware/store";
-import {SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType} from "../../app/app-reducer";
+import {setAppStatusAC} from "../../app/app-reducer";
 import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
 
 
@@ -93,15 +93,15 @@ export const SetTasksAC = (tasks: Array<TaskType>, todolistId: string) => ({
 
 // Создадим функцию, САНКУ-задача сделать асинх. работу, запросить данные и ответ заdispatch в Redux,изменим state
 
-export const fetchTasksTC = (todolistId: string) => (dispatch: Dispatch<ActionsType | SetAppStatusActionType>) => {
+export const fetchTasksTC = (todolistId: string) => (dispatch: Dispatch) => {
     //перед запросом крутилку покажи:
-    dispatch(setAppStatusAC("loading"))
+    dispatch(setAppStatusAC({status:"loading"}))
 
     todolistsAPI.getTasks(todolistId)
         .then((res) => {
             dispatch(SetTasksAC(res.data.items, todolistId))
             //крутилку убираем:
-            dispatch(setAppStatusAC("succeeded"))
+            dispatch(setAppStatusAC({status:"succeeded"}))
         })
 }
 
@@ -113,9 +113,9 @@ export const deleteTaskTC = (taskId: string, todolistId: string) => (dispatch: D
     })
 }
 
-export const addTaskTC = (taskTitle: string, todolistId: string) => (dispatch: Dispatch<ActionsType | SetAppErrorActionType | SetAppStatusActionType>) => {
+export const addTaskTC = (taskTitle: string, todolistId: string) => (dispatch: Dispatch) => {
     //крутилку покажи
-    dispatch(setAppStatusAC("loading"))
+    dispatch(setAppStatusAC({status:"loading"}))
     todolistsAPI.createTask(todolistId, taskTitle)
         .then(res => {
             if (res.data.resultCode === 0) {
@@ -125,7 +125,7 @@ export const addTaskTC = (taskTitle: string, todolistId: string) => (dispatch: D
                 const action = addTaskAC(task)
                 dispatch(action)
                 //крутилку убери:
-                dispatch(setAppStatusAC("succeeded"))
+                dispatch(setAppStatusAC({status:"succeeded"}))
             } else {
 
                 handleServerAppError(res.data, dispatch)
@@ -212,4 +212,4 @@ type ActionsType =
     | SetTodolistsActionType
     | ClearDataActionType
 
-type  ThunkDispatchType = Dispatch<ActionsType | SetAppStatusActionType | SetAppErrorActionType>
+type  ThunkDispatchType = Dispatch<ActionsType>

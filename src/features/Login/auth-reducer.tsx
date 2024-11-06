@@ -19,7 +19,7 @@ const slice = createSlice({
     name: "auth",
     initialState: initialState,
     reducers: {
-        //как маленький редьюсер
+        //как маленький под-редьюсер
         setIsLoggedInAC(state, action: PayloadAction<{value:boolean}>) {
             //меняем мутабельно
             state.isLoggedIn = action.payload.value
@@ -57,7 +57,7 @@ export const {setIsLoggedInAC} = slice.actions
 //закинем в санку собранные с формочки данные в объект data
 export const loginTC = (data: LoginParamsType) => (dispatch: Dispatch) => {
     //крутилку покажи
-    dispatch(setAppStatusAC("loading"))
+    dispatch(setAppStatusAC({status:"loading"}))
     authAPI.login(data)
         .then(res => {
             if (res.data.resultCode === 0) {
@@ -65,7 +65,7 @@ export const loginTC = (data: LoginParamsType) => (dispatch: Dispatch) => {
                 dispatch(setIsLoggedInAC({value:true}))
 
                 //крутилку убери:
-                dispatch(setAppStatusAC("succeeded"))
+                dispatch(setAppStatusAC({status:"succeeded"}))
             } else {
                 handleServerAppError(res.data, dispatch)
             }
@@ -78,7 +78,7 @@ export const loginTC = (data: LoginParamsType) => (dispatch: Dispatch) => {
 
 export const logoutTC = () => (dispatch: Dispatch) => {
     //крутилку покажи
-    dispatch(setAppStatusAC("loading"))
+    dispatch(setAppStatusAC({status:"loading"}))
     return authAPI.logout()
         .then(res => {
             if (res.data.resultCode === 0) {
@@ -86,7 +86,7 @@ export const logoutTC = () => (dispatch: Dispatch) => {
                 dispatch(setIsLoggedInAC({value:false}))
 
                 //крутилку убери:
-                dispatch(setAppStatusAC("succeeded"))
+                dispatch(setAppStatusAC({status:"succeeded"}))
 
                 //зачисти данные после вылогинивания
                 dispatch(clearTodosDataAC())
