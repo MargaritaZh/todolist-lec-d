@@ -81,7 +81,7 @@ const slice = createSlice({
                 state[index].filter = action.payload.filter;
             }
         },
-        clearTodosDataAC(state, action: PayloadAction<{}>) {
+        clearTodosDataAC(state) {
 
            //???уточнить
             return []
@@ -101,6 +101,14 @@ export const {
     changeTodolistTitleAC,
     clearTodosDataAC
 } = slice.actions
+
+
+export type AddTodolistActionType = ReturnType<typeof addTodolistAC>
+export type RemoveTodolistActionType = ReturnType<typeof removeTodolistAC>
+export type SetTodolistsActionType = ReturnType<typeof setTodolistsAC>
+export type ClearDataActionType = ReturnType<typeof clearTodosDataAC>
+
+
 
 
 type ActionsType =
