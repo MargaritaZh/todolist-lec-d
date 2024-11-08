@@ -10,12 +10,16 @@ import {AppRootStateType} from "../middleware/store";
 import {TaskPriorities, TaskStatuses} from "../api/todolists-api";
 import {appReducer} from "../app/app-reducer";
 import {thunk} from "redux-thunk";
+import {authReducer} from "../features/Login/auth-reducer";
+import {configureStore} from "@reduxjs/toolkit";
+
 
 const rootReducer = combineReducers({
     tasks: tasksReducer,
     todolist: todolistsReducer,
-    app: appReducer
-})
+    app: appReducer,
+    auth: authReducer
+});
 
 const initialGlobalState: AppRootStateType = {
     todolist: [
@@ -83,18 +87,25 @@ const initialGlobalState: AppRootStateType = {
         ]
     },
     app: {
-        themeMode:"light",
+        themeMode: "light",
         error: null,
-        status: "idle",
-        isInitialized:false
+        status: "succeeded",
+        isInitialized: true
     },
     auth: {
-        isLoggedIn:false
+        isLoggedIn: true
     }
 };
 
 // @ts-ignore
-export const storyBookStore = legacy_createStore(rootReducer, initialGlobalState, applyMiddleware(thunk));
+// export const storyBookStore = legacy_createStore(rootReducer, initialGlobalState, applyMiddleware(thunk));
+//перепишем
+
+export const storyBookStore = configureStore({
+    reducer: rootReducer,
+    preloadedState: initialGlobalState,
+    middleware: getDefaultMiddleware => getDefaultMiddleware().prepend(thunk)
+})
 
 
 export const ReduxStoreProviderDecorator = (storyFn: () => React.ReactNode) => {

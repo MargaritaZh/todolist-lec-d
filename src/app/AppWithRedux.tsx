@@ -40,7 +40,9 @@ function AppWithRedux({demo = false, ...props}: PropsType) {
     //мы должны один раз проинициализировать приложение,когда компанента вмонтировалась
     // вызовется один раз раз []
     useEffect(() => {
-        dispatch(initializeAppTC())
+        if(!demo){
+            dispatch(initializeAppTC())
+        }
     }, [])
 
 

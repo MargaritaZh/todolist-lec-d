@@ -7,7 +7,7 @@ import {authReducer} from "../features/Login/auth-reducer";
 import {configureStore} from "@reduxjs/toolkit";
 
 
-const rootReducer = combineReducers({
+const rootReducer= combineReducers({
         todolist: todolistsReducer,
         tasks: tasksReducer,
         app: appReducer,
@@ -24,13 +24,12 @@ export const store = configureStore({
     middleware: (getDefaultMiddleware) =>
         //thunkMiddleware всиавим сюда по синтаксису: import {thunk} from "redux-thunk"
         getDefaultMiddleware().prepend(thunk),
-
-
 })
 
 
 //это СТАРОЕ,НЕ ЗАКОМЕНТИЛА ЧТОБЫ Е ПЕРЕДЕЛЫВАТЬ ТИПИЗАЦИЮ
 export type AppRootStateType = ReturnType<typeof rootReducer>
+
 
 // @ts-ignore
 window.store = store

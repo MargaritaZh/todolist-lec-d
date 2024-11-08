@@ -33,7 +33,7 @@ function AppWithReducers() {
             filter: "all",
             addedDate: "",
             order: 0,
-            entityStatus:"idle"
+            entityStatus: "idle"
         },
         {
             id: todolistId2,
@@ -41,7 +41,7 @@ function AppWithReducers() {
             filter: "all",
             addedDate: "",
             order: 0,
-            entityStatus:"idle"
+            entityStatus: "idle"
         },
     ])
 
@@ -106,68 +106,70 @@ function AppWithReducers() {
 
 
     function removeTask(id: string, todolistId: string) {
-        const action = removeTaskAC(id, todolistId)
+        const action = removeTaskAC({taskId: id, todolistId: todolistId})
         dispatchToTasksReducer(action)
     }
 
 
     function addTask(title: string, todolistId: string) {
         const action = addTaskAC({
-            todoListId: todolistId,
-            title: title,
-            status: TaskStatuses.New,
-            addedDate: "",
-            deadline: "",
-            description: "",
-            order: 0,
-            priority: 0,
-            startDate: "",
-            id: "id exsists",
+            task: {
+                todoListId: todolistId,
+                title: title,
+                status: TaskStatuses.New,
+                addedDate: "",
+                deadline: "",
+                description: "",
+                order: 0,
+                priority: 0,
+                startDate: "",
+                id: "id exsists"
+            }
         })
         dispatchToTasksReducer(action)
     }
 
 
     function changeStatus(taskId: string, status: TaskStatuses, todolistId: string) {
-        const action = updateTaskAC(taskId, {status:status}, todolistId)
+        const action = updateTaskAC({taskId:taskId,model: {status: status},todolistId: todolistId})
         dispatchToTasksReducer(action)
     }
 
 
     function changeTaskTitle(taskId: string, newTitle: string, todolistId: string) {
-        const action = updateTaskAC(taskId, {title:newTitle}, todolistId)
+        const action = updateTaskAC({taskId:taskId, model:{title: newTitle}, todolistId:todolistId})
         dispatchToTasksReducer(action)
     }
 
 
     function changeFilter(value: FilterValuesType, todolistId: string) {
-        const action = changeTodolistFilterAC({id:todolistId,filter: value})
+        const action = changeTodolistFilterAC({id: todolistId, filter: value})
         dispatchToTodolistsReducer(action)
     }
 
 
     function removeTodolist(todolistId: string) {
-        const action = removeTodolistAC({id:todolistId})
+        const action = removeTodolistAC({id: todolistId})
         dispatchToTodolistsReducer(action)
         dispatchToTasksReducer(action)
     }
 
 
     function changeTodolistTitle(id: string, newTitle: string) {
-        const action = changeTodolistTitleAC({id:id,title: newTitle})
+        const action = changeTodolistTitleAC({id: id, title: newTitle})
         dispatchToTodolistsReducer(action)
     }
 
 
     function addTodolist(title: string) {
 
-        const newTodolist={
+        const newTodolist = {
             id: v1(),
             addedDate: "",
             order: 0,
             title: title,
         }
-        const action = addTodolistAC({todolist:newTodolist})
+        const action = addTodolistAC({todolist: newTodolist})
 
         dispatchToTodolistsReducer(action)
         dispatchToTasksReducer(action)
